@@ -8,46 +8,29 @@
     <style>
         body {
             font-family: 'Tajawal', sans-serif;
-            background: #05011a;
+            background: #05011a; /* لون غامق ملكي ثابت */
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             margin: 0;
-            overflow: hidden;
-        }
-
-        .bg-glow {
-            position: absolute;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(0,242,234,0.3) 0%, rgba(255,0,255,0.1) 70%);
-            filter: blur(80px);
-            z-index: -1;
-            animation: pulse 4s infinite alternate;
-        }
-
-        @keyframes pulse {
-            from { transform: scale(1); opacity: 0.5; }
-            to { transform: scale(1.2); opacity: 0.8; }
         }
 
         .login-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(25px);
-            padding: 45px 30px;
-            border-radius: 35px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            padding: 40px 30px;
+            border-radius: 25px;
             width: 90%;
             max-width: 380px;
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-            animation: slideUp 0.8s ease-out;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
         }
 
         h1 {
-            font-size: 42px;
-            margin-bottom: 35px;
+            font-size: 38px;
+            margin-bottom: 30px;
             background: linear-gradient(45deg, #00f2ea, #ff00ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -56,8 +39,8 @@
 
         input {
             width: 100%;
-            padding: 16px;
-            border-radius: 15px;
+            padding: 15px;
+            border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             background: rgba(255, 255, 255, 0.08);
             color: white;
@@ -71,40 +54,39 @@
 
         input:focus {
             border-color: #00f2ea;
-            box-shadow: 0 0 15px rgba(0, 242, 234, 0.3);
+            background: rgba(255, 255, 255, 0.12);
         }
 
         button {
             width: 100%;
-            padding: 16px;
+            padding: 15px;
             border: none;
-            border-radius: 15px;
+            border-radius: 12px;
             background: linear-gradient(45deg, #00f2ea, #667eea);
             color: white;
             font-weight: 900;
             font-size: 20px;
             cursor: pointer;
-            transition: 0.4s;
+            transition: 0.3s;
         }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
+        button:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
         }
     </style>
 </head>
 <body>
 
-    <div class="bg-glow"></div>
-
     <div class="login-card">
         <h1>المُصيبة</h1>
         <input type="text" id="user" placeholder="اسم الأميرة">
-        <input type="text" id="pass" placeholder="كلمة السر"> <button onclick="login()">دخول المنصة ✨</button>
+        <input type="text" id="pass" placeholder="كلمة السر">
+        <button onclick="login()">دخول المنصة ✨</button>
     </div>
 
     <script>
-        // دالة تحويل الأرقام العربية لإنجليزية
+        // دالة تحويل الأرقام العربية لإنجليزية (عشان الفون)
         const fixNumbers = (str) => {
             return str.replace(/[٠-٩]/g, (d) => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
         };
@@ -113,7 +95,6 @@
             let u = document.getElementById('user').value.trim();
             let p = document.getElementById('pass').value.trim();
 
-            // تحويل الباسورد لو كان مكتوب بالعربي
             p = fixNumbers(p);
 
             const isNaglaa = (u === "نجلاء");
@@ -124,7 +105,7 @@
                 sessionStorage.setItem('currentUser', u);
                 window.location.href = "services.html";
             } else {
-                alert("البيانات غلط يا أميرة.. تأكدي إن الباسوورد ٢٠٢٦ والاسم صح 👑");
+                alert("البيانات غلط يا أميرة.. تأكدي من الاسم وكلمة السر 👑");
             }
         }
     </script>
