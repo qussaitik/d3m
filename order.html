@@ -2,37 +2,44 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>تأكيد الطلب</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700&display=swap" rel="stylesheet">
+    <title>نموذج تقديم الطلب</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        body { background: #0b0116; color: white; font-family: 'Tajawal', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .form-box { background: #1a1a1a; padding: 40px; border-radius: 25px; width: 90%; max-width: 450px; border: 2px solid #ff00ff; text-align: center; }
-        h2 { color: #00f2ea; margin-bottom: 25px; }
-        input { width: 100%; padding: 15px; margin: 15px 0; background: #222; border: 1px solid #333; color: white; border-radius: 12px; box-sizing: border-box; font-size: 18px; outline: none; }
-        button { width: 100%; padding: 18px; background: #25D366; color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 20px; transition: 0.3s; box-shadow: 0 10px 20px rgba(37, 211, 102, 0.2); }
-        button:hover { background: #1da851; transform: scale(1.02); }
+        body { font-family: 'Tajawal', sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .order-form { background: white; padding: 40px; border-radius: 15px; width: 100%; max-width: 450px; box-shadow: 0 4px 25px rgba(0,0,0,0.05); }
+        h2 { color: #2c3e50; margin-bottom: 25px; text-align: center; }
+        input { width: 100%; padding: 14px; margin: 15px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; outline: none; }
+        button { width: 100%; padding: 16px; background-color: #27ae60; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 17px; transition: 0.3s; }
+        button:hover { background-color: #219150; }
     </style>
 </head>
 <body>
-    <div class="form-box">
-        <h2 id="stitle">طلب الخدمة</h2>
-        <input type="text" id="link" placeholder="الرابط هون يا غالي...">
-        <input type="number" id="qty" placeholder="الكمية المطلوبة">
-        <button onclick="sendOrder()">تأكيد الطلب عبر واتساب ✅</button>
+    <div class="order-form">
+        <h2 id="service-name">تقديم طلب جديد</h2>
+        <input type="text" id="link" placeholder="أدخل الرابط الإلكتروني">
+        <input type="number" id="qty" placeholder="أدخل الكمية المطلوبة">
+        <button onclick="confirmOrder()">إرسال الطلب عبر الواتساب</button>
     </div>
     <script>
-        const s = localStorage.getItem('chosenService');
-        document.getElementById('stitle').innerText = "طلب " + s;
-        function sendOrder() {
-            const l = document.getElementById('link').value;
-            const q = document.getElementById('qty').value;
-            if(!l || !q) return alert("لازم تعبي كل البيانات!");
-            
+        const service = localStorage.getItem('chosenService') || "الخدمة";
+        document.getElementById('service-name').innerText = "طلب " + service;
+
+        function confirmOrder() {
+            const link = document.getElementById('link').value;
+            const qty = document.getElementById('qty').value;
+            if(!link || !qty) return alert("يرجى إكمال جميع الحقول.");
+
             let orders = JSON.parse(localStorage.getItem('database')) || [];
-            orders.push({ user: sessionStorage.getItem('currentUser'), service: s, link: l, qty: q, date: new Date().toLocaleString() });
+            orders.push({
+                user: sessionStorage.getItem('currentUser') || "مشرف",
+                service: service,
+                link: link,
+                qty: qty,
+                date: new Date().toLocaleString()
+            });
             localStorage.setItem('database', JSON.stringify(orders));
 
-            const msg = `🔥 *طلب جديد من المصيبة*%0A👤 *العميل:* ${sessionStorage.getItem('currentUser')}%0A🛠 *الخدمة:* ${s}%0A🔗 *الرابط:* ${l}%0A🔢 *الكمية:* ${q}`;
+            const msg = `*إخطار بطلب جديد*%0A*المستخدم:* ${sessionStorage.getItem('currentUser')}%0A*الخدمة:* ${service}%0A*الرابط:* ${link}%0A*الكمية:* ${qty}`;
             window.location.href = `https://wa.me/972555630038?text=${msg}`;
         }
     </script>
