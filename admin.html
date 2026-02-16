@@ -4,54 +4,68 @@
     <meta charset="UTF-8">
     <title>لوحة تحكم المصيبة</title>
     <style>
-        body { background: #f0f2f5; font-family: sans-serif; padding: 30px; }
-        h1 { color: #ff4b2b; text-align: center; }
-        table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        body { background: #f0f2f5; font-family: 'Tajawal', sans-serif; padding: 30px; }
+        h1 { color: #ff4b2b; text-align: center; font-size: 32px; }
+        .container { max-width: 1100px; margin: auto; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 25px rgba(0,0,0,0.1); }
         th, td { padding: 15px; text-align: right; border-bottom: 1px solid #eee; }
         th { background: #ff4b2b; color: white; }
-        .btn-del { background: #ff0000; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 5px; }
+        tr:hover { background-color: #f9f9f9; }
+        .link-text { color: #007bff; text-decoration: none; word-break: break-all; font-size: 14px; }
+        .link-text:hover { text-decoration: underline; }
+        .btn-del { background: #ff0000; color: white; border: none; padding: 8px 12px; cursor: pointer; border-radius: 6px; font-weight: bold; }
+        .btn-del:hover { background: #cc0000; }
     </style>
 </head>
 <body>
-    <h1>إدارة طلبات المصيبة 💀</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>المستخدم</th>
-                <th>الخدمة</th>
-                <th>الرابط</th>
-                <th>الكمية</th>
-                <th>التاريخ</th>
-                <th>إجراء</th>
-            </tr>
-        </thead>
-        <tbody id="table-body"></tbody>
-    </table>
+    <div class="container">
+        <h1>إدارة طلبات المصيبة 💀</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>المستخدم</th>
+                    <th>الخدمة</th>
+                    <th>الرابط المطلوب</th>
+                    <th>الكمية</th>
+                    <th>التاريخ</th>
+                    <th>إجراء</th>
+                </tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+        </table>
+    </div>
 
     <script>
         function loadOrders() {
             let orders = JSON.parse(localStorage.getItem('database')) || [];
             let tbody = document.getElementById('table-body');
             tbody.innerHTML = "";
+            
             orders.forEach((o, index) => {
                 tbody.innerHTML += `
                     <tr>
-                        <td>${o.user}</td>
+                        <td><strong>${o.user}</strong></td>
                         <td>${o.service}</td>
-                        <td><a href="${o.link}" target="_blank">فتح الرابط</a></td>
-                        <td>${o.qty}</td>
+                        <td>
+                            <a href="${o.link}" target="_blank" class="link-text">${o.link}</a>
+                        </td>
+                        <td><span style="color: green; font-weight: bold;">${o.qty}</span></td>
                         <td>${o.date}</td>
                         <td><button class="btn-del" onclick="deleteOrder(${index})">حذف</button></td>
                     </tr>
                 `;
             });
         }
+
         function deleteOrder(i) {
-            let orders = JSON.parse(localStorage.getItem('database'));
-            orders.splice(i, 1);
-            localStorage.setItem('database', JSON.stringify(orders));
-            loadOrders();
+            if(confirm("بدك تحذف الطلب نهائياً؟")) {
+                let orders = JSON.parse(localStorage.getItem('database'));
+                orders.splice(i, 1);
+                localStorage.setItem('database', JSON.stringify(orders));
+                loadOrders();
+            }
         }
+
         loadOrders();
     </script>
 </body>
