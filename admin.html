@@ -6,7 +6,7 @@
     <title>لوحة الإدارة | المُصيبة</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700;900&display=swap" rel="stylesheet">
     <style>
-        /* شاشة تسجيل دخول الإدارة */
+        /* شاشة حماية الإدارة */
         #admin-lock {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #05011a; display: flex; justify-content: center; align-items: center;
@@ -28,7 +28,7 @@
             font-weight: 900; cursor: pointer; font-size: 18px;
         }
 
-        /* محتوى اللوحة (مخفي) */
+        /* محتوى اللوحة (مخفي بالبداية) */
         #admin-main { display: none; }
 
         body { font-family: 'Tajawal', sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
@@ -37,11 +37,14 @@
         .user-row { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: #fafafa; border-radius: 12px; margin-bottom: 10px; }
         .balance-badge { background: #e8f5e9; color: #2e7d32; padding: 8px 15px; border-radius: 10px; font-weight: 900; font-size: 18px; border: 1px solid #c8e6c9; }
         .balance-input { width: 80px !important; padding: 8px !important; margin: 0 !important; display: inline-block; }
-        button { padding: 10px 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; }
-        .btn-add { background: #27ae60; } .btn-sub { background: #e74c3c; }
+        button { padding: 10px 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; transition: 0.3s; }
+        .btn-add { background: #27ae60; } 
+        .btn-sub { background: #e74c3c; }
+        button:hover { opacity: 0.8; }
         table { width: 100%; border-collapse: collapse; }
         th { background: #302b63; color: white; padding: 12px; text-align: right; }
         td { padding: 12px; border-bottom: 1px solid #eee; }
+        a { color: #3498db; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -57,11 +60,11 @@
 
     <div id="admin-main">
         <div class="card">
-            <h3>💰 أرصدة الملكات</h3>
+            <h3>💰 أرصدة الملكات (نجلاء، ورده، مرح)</h3>
             <div id="balances-container">جاري التحميل...</div>
         </div>
         <div class="card">
-            <h3>📦 سجل الطلبات</h3>
+            <h3>📦 سجل الطلبات الأخير</h3>
             <div style="overflow-x: auto;">
                 <table>
                     <thead><tr><th>المستخدم</th><th>الخدمة</th><th>الكمية</th><th>الرابط</th><th>التاريخ</th></tr></thead>
@@ -86,7 +89,7 @@
                 document.getElementById('admin-lock').style.display = 'none';
                 document.getElementById('admin-main').style.display = 'block';
                 loadData();
-                setInterval(loadData, 15000);
+                setInterval(loadData, 15000); // تحديث تلقائي كل 15 ثانية
             } else {
                 alert("بيانات الدخول غلط يا مدير! ركز هههه");
             }
@@ -103,10 +106,12 @@
 
                 const balContainer = document.getElementById('balances-container');
                 balContainer.innerHTML = "";
-                ['نجلاء', 'ورده'].forEach(u => {
+                
+                // ضفنا "مرح" هون للقائمة
+                ['نجلاء', 'ورده', 'مرح'].forEach(u => {
                     balContainer.innerHTML += `
                         <div class="user-row">
-                            <b>${u}</b>
+                            <b>👑 ${u}</b>
                             <div class="balance-badge" id="val_${u}">$${balances[u] || 0}</div>
                             <div>
                                 <input type="number" id="amt_${u}" class="balance-input" placeholder="0">
@@ -117,21 +122,32 @@
                 });
 
                 document.getElementById('list').innerHTML = orders.reverse().map(o => `
-                    <tr><td><b>${o.user}</b></td><td>${o.service}</td><td>${o.qty}</td>
-                    <td><a href="${o.link}" target="_blank" style="color:#3498db;">فتح الرابط</a></td>
-                    <td><small>${o.date}</small></td></tr>`).join('');
+                    <tr>
+                        <td><b>${o.user}</b></td>
+                        <td>${o.service}</td>
+                        <td>${o.qty}</td>
+                        <td><a href="${o.link}" target="_blank">فتح الرابط</a></td>
+                        <td><small>${o.date}</small></td>
+                    </tr>`).join('');
             } catch(e) { console.log("Error loading data"); }
         }
 
         async function updateBal(u, t) {
             const val = document.getElementById('amt_'+u).value;
             if(!val) return alert("دخل مبلغ التعديل!");
-            document.getElementById('val_'+u).innerText = "⏳...";
+            
+            // تغيير مؤقت للشكل عشان تعرف إنه جاري الحفظ
+            const badge = document.getElementById('val_'+u);
+            const oldVal = badge.innerText;
+            badge.innerText = "⏳...";
+            
             await fetch(scriptURL, { 
                 method: "POST", 
                 mode: "no-cors", 
                 body: JSON.stringify({ action: "updateBalance", user: u, amount: val, type: t }) 
             });
+            
+            // تحديث البيانات بعد ثانيتين عشان نضمن الشيت اتحدث
             setTimeout(loadData, 2000);
             document.getElementById('amt_'+u).value = "";
         }
