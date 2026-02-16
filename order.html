@@ -6,45 +6,16 @@
     <title>تقديم الطلب | المصيبة</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700;900&display=swap" rel="stylesheet">
     <style>
-        body { 
-            font-family: 'Tajawal', sans-serif; 
-            background: #0f0c29; 
-            color: white; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            margin: 0; 
-        }
-        .card { 
-            background: rgba(255,255,255,0.1); 
-            backdrop-filter: blur(15px);
-            padding: 35px 25px; 
-            border-radius: 25px; 
-            width: 85%; 
-            max-width: 400px; 
-            text-align: center; 
-            border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-        }
+        body { font-family: 'Tajawal', sans-serif; background: #0f0c29; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: rgba(255,255,255,0.1); backdrop-filter: blur(15px); padding: 35px 25px; border-radius: 25px; width: 85%; max-width: 400px; text-align: center; border: 1px solid rgba(255,255,255,0.2); }
         h2 { font-size: 28px; color: #00f2ea; margin-bottom: 25px; font-weight: 900; }
-        input { 
-            width: 100%; padding: 18px; margin: 12px 0; border-radius: 12px; border: none;
-            background: rgba(0,0,0,0.3); color: white; font-size: 18px; box-sizing: border-box;
-            outline: none; border: 1px solid rgba(255,255,255,0.1);
-        }
-        input:focus { border-color: #ff00ff; }
-        #orderBtn { 
-            width: 100%; padding: 18px; background: linear-gradient(45deg, #00f2ea, #667eea);
-            color: #000; font-weight: 900; font-size: 20px; border: none; border-radius: 12px; 
-            margin-top: 15px; cursor: pointer; transition: 0.3s;
-        }
-        #orderBtn:disabled { background: #555; cursor: not-allowed; color: #ccc; }
+        input { width: 100%; padding: 18px; margin: 12px 0; border-radius: 12px; border: none; background: rgba(0,0,0,0.3); color: white; font-size: 18px; box-sizing: border-box; outline: none; border: 1px solid rgba(255,255,255,0.1); }
+        #orderBtn { width: 100%; padding: 18px; background: linear-gradient(45deg, #00f2ea, #667eea); color: #000; font-weight: 900; font-size: 20px; border: none; border-radius: 12px; margin-top: 15px; cursor: pointer; transition: 0.3s; }
+        #orderBtn:disabled { background: #555; cursor: not-allowed; }
         .status-msg { margin-top: 15px; font-size: 14px; color: #ff00ff; display: none; }
     </style>
 </head>
 <body>
-
     <div class="card">
         <h2 id="title">طلب خدمة</h2>
         <input type="text" id="userInput" placeholder="أدخل اسم المستخدم (اليوزر)">
@@ -55,7 +26,7 @@
 
     <script>
         const scriptURL = "https://script.google.com/macros/s/AKfycbx-CzLtyGIJyoggh6GqSahiumRMrErOMAoXA1pjYdbECXp2PSEke1zXLyelzldXCxin/exec";
-        const service = localStorage.getItem('chosenService') || "خدمة عامة";
+        const service = localStorage.getItem('chosenService') || "خدمة";
         document.getElementById('title').innerText = "طلب " + service;
 
         async function sendOrder() {
@@ -65,20 +36,10 @@
             const btn = document.getElementById('orderBtn');
             const status = document.getElementById('status');
 
-            if(!inputVal || !qty) {
-                alert("يا غالي عبي اليوزر والكمية أولاً!");
-                return;
-            }
+            if(!inputVal || !qty) return alert("عبي البيانات يا بطل!");
 
-            // --- التعديل السحري هون ---
-            // إذا المستخدم ما حط الرابط كامل، بنحطله رابط تيك توك تلقائياً
-            let finalLink = inputVal;
-            if (!inputVal.includes("tiktok.com")) {
-                // بنشيل الـ @ لو المستخدم حطها عشان ما تتكرر
-                let cleanUser = inputVal.replace("@", "");
-                finalLink = "https://www.tiktok.com/@" + cleanUser;
-            }
-            // --------------------------
+            // تحويل اليوزر لرابط تيك توك تلقائياً
+            let finalLink = inputVal.includes("tiktok.com") ? inputVal : "https://www.tiktok.com/@" + inputVal.replace("@", "");
 
             btn.disabled = true;
             btn.innerText = "جاري الحفظ...";
@@ -88,33 +49,19 @@
                 await fetch(scriptURL, {
                     method: "POST",
                     mode: "no-cors",
-                    body: JSON.stringify({ 
-                        action: "addOrder", 
-                        user: user, 
-                        service: service, 
-                        link: finalLink, // هون بنبعت الرابط الجديد
-                        qty: qty, 
-                        date: new Date().toLocaleString() 
-                    })
+                    body: JSON.stringify({ action: "addOrder", user: user, service: service, link: finalLink, qty: qty, date: new Date().toLocaleString() })
                 });
 
-                status.innerText = "✅ تم تسجيل الطلب في لوحة التحكم!";
-                status.style.color = "#27ae60";
+                status.innerText = "✅ تم التسجيل! اضغط الآن للواتساب";
                 btn.innerText = "تأكيد عبر واتساب 💬";
                 btn.style.background = "linear-gradient(45deg, #25D366, #128C7E)";
                 btn.disabled = false;
                 
                 btn.onclick = function() {
-                    const msg = `*طلب جديد من المصيبة*%0A*المستخدم:* ${user}%0A*الخدمة:* ${service}%0A*اليوزر:* ${inputVal}%0A*الرابط:* ${finalLink}%0A*الكمية:* ${qty}`;
+                    const msg = `*طلب جديد*%0A*المستخدم:* ${user}%0A*الخدمة:* ${service}%0A*الرابط:* ${finalLink}%0A*الكمية:* ${qty}`;
                     window.location.href = `https://wa.me/972555630038?text=${msg}`;
                 };
-
-            } catch (e) {
-                alert("حدث خطأ بسيط، حاول مرة أخرى.");
-                btn.disabled = false;
-                btn.innerText = "تأكيد وإرسال الطلب";
-                status.style.display = "none";
-            }
+            } catch (e) { alert("خطأ! جرب مرة ثانية"); btn.disabled = false; }
         }
     </script>
 </body>
