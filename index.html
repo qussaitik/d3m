@@ -2,51 +2,137 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>المصيبة | دخول</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المُصيبة | دخول</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700;900&display=swap" rel="stylesheet">
     <style>
-        body { 
-            font-family: 'Tajawal', sans-serif; 
-            background: linear-gradient(135deg, #0f0c29, #302b63); 
-            height: 100vh; margin: 0; display: flex; justify-content: center; align-items: center; color: white;
+        /* خلفية متحركة وألوان نيون */
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: #05011a;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            overflow: hidden;
         }
-        .glass-card { 
-            background: rgba(255, 255, 255, 0.1); 
-            backdrop-filter: blur(15px); 
-            padding: 30px; border-radius: 25px; 
-            width: 85%; max-width: 400px; /* عرض مناسب للموبايل */
-            text-align: center; border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+
+        /* تأثير الإضاءة في الخلفية */
+        body::before {
+            content: "";
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: #ff00ff;
+            filter: blur(150px);
+            top: 10%;
+            left: 10%;
+            z-index: -1;
+            animation: float 6s infinite alternate;
         }
-        h2 { font-size: 35px; font-weight: 900; background: linear-gradient(to left, #00f2ea, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 30px; }
-        input { 
-            width: 100%; padding: 18px; margin: 15px 0; border-radius: 15px; border: none; 
-            background: rgba(255,255,255,0.1); color: white; font-size: 18px; /* تكبير الخط والخانات */
-            box-sizing: border-box; outline: none; 
+
+        @keyframes float {
+            from { transform: translate(0, 0); }
+            to { transform: translate(50px, 50px); }
         }
-        button { 
-            width: 100%; padding: 18px; background: linear-gradient(45deg, #00f2ea, #ff00ff); 
-            color: white; border: none; border-radius: 15px; cursor: pointer; 
-            font-weight: bold; font-size: 20px; margin-top: 20px;
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 30px;
+            width: 90%;
+            max-width: 380px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            animation: zoomIn 0.8s ease-out;
+        }
+
+        h1 {
+            font-size: 45px;
+            margin-bottom: 30px;
+            background: linear-gradient(to right, #00f2ea, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 15px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 18px;
+            outline: none;
+            box-sizing: border-box;
+            transition: 0.3s;
+            text-align: center;
+        }
+
+        input:focus {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 15px rgba(0, 242, 234, 0.5);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(45deg, #00f2ea, #ff00ff);
+            color: white;
+            font-weight: 900;
+            font-size: 20px;
+            cursor: pointer;
+            transition: 0.4s;
+            box-shadow: 0 10px 20px rgba(255, 0, 255, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(255, 0, 255, 0.5);
+        }
+
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
         }
     </style>
 </head>
 <body>
-    <div class="glass-card">
-        <h2>المُصـيـبـة</h2>
-        <input type="text" id="user" placeholder="اسم المستخدم">
-        <input type="password" id="pass" placeholder="كلمة المرور">
-        <button onclick="login()">دخول المنصة</button>
+
+    <div class="login-card">
+        <h1>المُصيبة</h1>
+        <div class="input-group">
+            <input type="text" id="user" placeholder="اسم الأميرة">
+        </div>
+        <div class="input-group">
+            <input type="password" id="pass" placeholder="كلمة السر">
+        </div>
+        <button onclick="login()">دخول المنصة ✨</button>
     </div>
+
     <script>
         function login() {
             const u = document.getElementById('user').value;
             const p = document.getElementById('pass').value;
-            if(u === "ADMIN" && p === "0598787757") window.location.href = "admin.html";
-            else if((u === "نجلاء" || u === "ورده") && p === "2026") {
+
+            // كود التحقق البسيط تبعك
+            if((u === "نجلاء" || u === "ورده") && p === "1234") {
                 sessionStorage.setItem('currentUser', u);
                 window.location.href = "services.html";
-            } else alert("البيانات غير صحيحة يا غالي.");
+            } else {
+                alert("بياناتك غلط يا أميرة، شيكي عليها!");
+            }
         }
     </script>
 </body>
