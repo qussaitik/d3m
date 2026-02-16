@@ -3,45 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم | المصيبة</title>
+    <title>لوحة الإدارة | المُصيبة</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700;900&display=swap" rel="stylesheet">
     <style>
+        /* شاشة تسجيل دخول الإدارة */
+        #admin-lock {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #05011a; display: flex; justify-content: center; align-items: center;
+            z-index: 10000; flex-direction: column;
+        }
+        .login-box { 
+            background: rgba(255,255,255,0.05); padding: 40px; border-radius: 25px; 
+            text-align: center; border: 1px solid #00f2ea; box-shadow: 0 0 30px rgba(0,242,234,0.2);
+            width: 90%; max-width: 350px;
+        }
+        .login-box h2 { color: white; margin-bottom: 25px; }
+        .login-box input { 
+            width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 12px; 
+            border: none; outline: none; text-align: center; font-size: 18px;
+        }
+        .btn-enter { 
+            width: 100%; padding: 15px; border-radius: 12px; border: none;
+            background: linear-gradient(45deg, #00f2ea, #667eea); color: white;
+            font-weight: 900; cursor: pointer; font-size: 18px;
+        }
+
+        /* محتوى اللوحة (مخفي) */
+        #admin-main { display: none; }
+
         body { font-family: 'Tajawal', sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
-        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 25px; animation: slideUp 0.5s; }
+        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 25px; }
         h3 { color: #302b63; border-bottom: 2px solid #eee; padding-bottom: 10px; margin: 0 0 20px 0; }
         .user-row { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: #fafafa; border-radius: 12px; margin-bottom: 10px; }
         .balance-badge { background: #e8f5e9; color: #2e7d32; padding: 8px 15px; border-radius: 10px; font-weight: 900; font-size: 18px; border: 1px solid #c8e6c9; }
-        input { width: 80px; padding: 10px; border-radius: 8px; border: 1px solid #ddd; text-align: center; }
-        button { padding: 10px 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; transition: 0.2s; }
+        .balance-input { width: 80px !important; padding: 8px !important; margin: 0 !important; display: inline-block; }
+        button { padding: 10px 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; }
         .btn-add { background: #27ae60; } .btn-sub { background: #e74c3c; }
-        button:hover { opacity: 0.8; }
         table { width: 100%; border-collapse: collapse; }
         th { background: #302b63; color: white; padding: 12px; text-align: right; }
         td { padding: 12px; border-bottom: 1px solid #eee; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h3>💰 إدارة الأرصدة</h3>
-        <div id="balances-container">جاري التحميل...</div>
-    </div>
-    <div class="card">
-        <h3>📦 سجل الطلبات</h3>
-        <div style="overflow-x: auto;">
-            <table>
-                <thead><tr><th>المستخدم</th><th>الخدمة</th><th>الكمية</th><th>الرابط</th><th>التاريخ</th></tr></thead>
-                <tbody id="list"></tbody>
-            </table>
+
+    <div id="admin-lock">
+        <div class="login-box">
+            <h2>دخول المدير 🛡️</h2>
+            <input type="text" id="admUser" placeholder="اسم المستخدم">
+            <input type="password" id="admPass" placeholder="كلمة السر">
+            <button class="btn-enter" onclick="validateAdmin()">دخول</button>
         </div>
     </div>
+
+    <div id="admin-main">
+        <div class="card">
+            <h3>💰 أرصدة الملكات</h3>
+            <div id="balances-container">جاري التحميل...</div>
+        </div>
+        <div class="card">
+            <h3>📦 سجل الطلبات</h3>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead><tr><th>المستخدم</th><th>الخدمة</th><th>الكمية</th><th>الرابط</th><th>التاريخ</th></tr></thead>
+                    <tbody id="list"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <script>
         const scriptURL = "https://script.google.com/macros/s/AKfycbx-CzLtyGIJyoggh6GqSahiumRMrErOMAoXA1pjYdbECXp2PSEke1zXLyelzldXCxin/exec";
+        
+        // بيانات الدخول الخاصة بك يا قصي
+        const MASTER_USER = "admin";
+        const MASTER_PASS = "0598787757";
+
+        function validateAdmin() {
+            const user = document.getElementById('admUser').value;
+            const pass = document.getElementById('admPass').value;
+
+            if (user === MASTER_USER && pass === MASTER_PASS) {
+                document.getElementById('admin-lock').style.display = 'none';
+                document.getElementById('admin-main').style.display = 'block';
+                loadData();
+                setInterval(loadData, 15000);
+            } else {
+                alert("بيانات الدخول غلط يا مدير! ركز هههه");
+            }
+        }
+
         async function loadData() {
             try {
-                const [balRes, ordRes] = await Promise.all([fetch(scriptURL + "?action=getBalances"), fetch(scriptURL + "?action=getOrders")]);
+                const [balRes, ordRes] = await Promise.all([
+                    fetch(scriptURL + "?action=getBalances"),
+                    fetch(scriptURL + "?action=getOrders")
+                ]);
                 const balances = await balRes.json();
                 const orders = await ordRes.json();
+
                 const balContainer = document.getElementById('balances-container');
                 balContainer.innerHTML = "";
                 ['نجلاء', 'ورده'].forEach(u => {
@@ -50,27 +109,32 @@
                             <b>${u}</b>
                             <div class="balance-badge" id="val_${u}">$${balances[u] || 0}</div>
                             <div>
-                                <input type="number" id="amt_${u}" placeholder="المبلغ">
+                                <input type="number" id="amt_${u}" class="balance-input" placeholder="0">
                                 <button class="btn-add" onclick="updateBal('${u}','add')">إضافة</button>
                                 <button class="btn-sub" onclick="updateBal('${u}','sub')">سحب</button>
                             </div>
                         </div>`;
                 });
+
                 document.getElementById('list').innerHTML = orders.reverse().map(o => `
                     <tr><td><b>${o.user}</b></td><td>${o.service}</td><td>${o.qty}</td>
                     <td><a href="${o.link}" target="_blank" style="color:#3498db;">فتح الرابط</a></td>
                     <td><small>${o.date}</small></td></tr>`).join('');
-            } catch(e) {}
+            } catch(e) { console.log("Error loading data"); }
         }
+
         async function updateBal(u, t) {
             const val = document.getElementById('amt_'+u).value;
-            if(!val) return alert("دخل المبلغ يا قصي!");
+            if(!val) return alert("دخل مبلغ التعديل!");
             document.getElementById('val_'+u).innerText = "⏳...";
-            await fetch(scriptURL, { method: "POST", mode: "no-cors", body: JSON.stringify({ action: "updateBalance", user: u, amount: val, type: t }) });
+            await fetch(scriptURL, { 
+                method: "POST", 
+                mode: "no-cors", 
+                body: JSON.stringify({ action: "updateBalance", user: u, amount: val, type: t }) 
+            });
             setTimeout(loadData, 2000);
             document.getElementById('amt_'+u).value = "";
         }
-        loadData(); setInterval(loadData, 15000);
     </script>
 </body>
 </html>
