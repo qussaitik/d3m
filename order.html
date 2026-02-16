@@ -47,7 +47,7 @@
 
     <div class="card">
         <h2 id="title">طلب خدمة</h2>
-        <input type="text" id="link" placeholder="رابط الحساب أو الفيديو">
+        <input type="text" id="userInput" placeholder="أدخل اسم المستخدم (اليوزر)">
         <input type="number" id="qty" placeholder="الكمية المطلوبة">
         <button id="orderBtn" onclick="sendOrder()">تأكيد وإرسال الطلب</button>
         <div id="status" class="status-msg">جاري تسجيل طلبك في السيستم...</div>
@@ -59,24 +59,32 @@
         document.getElementById('title').innerText = "طلب " + service;
 
         async function sendOrder() {
-            const link = document.getElementById('link').value;
+            let inputVal = document.getElementById('userInput').value.trim();
             const qty = document.getElementById('qty').value;
             const user = sessionStorage.getItem('currentUser') || "مجهول";
             const btn = document.getElementById('orderBtn');
             const status = document.getElementById('status');
 
-            if(!link || !qty) {
-                alert("يا غالي عبي الروابط والكمية أولاً!");
+            if(!inputVal || !qty) {
+                alert("يا غالي عبي اليوزر والكمية أولاً!");
                 return;
             }
 
-            // بدئ عملية الإرسال
+            // --- التعديل السحري هون ---
+            // إذا المستخدم ما حط الرابط كامل، بنحطله رابط تيك توك تلقائياً
+            let finalLink = inputVal;
+            if (!inputVal.includes("tiktok.com")) {
+                // بنشيل الـ @ لو المستخدم حطها عشان ما تتكرر
+                let cleanUser = inputVal.replace("@", "");
+                finalLink = "https://www.tiktok.com/@" + cleanUser;
+            }
+            // --------------------------
+
             btn.disabled = true;
             btn.innerText = "جاري الحفظ...";
             status.style.display = "block";
 
             try {
-                // إرسال البيانات للجوجل شيت (الطلب رح ينزل عند الأدمن)
                 await fetch(scriptURL, {
                     method: "POST",
                     mode: "no-cors",
@@ -84,22 +92,20 @@
                         action: "addOrder", 
                         user: user, 
                         service: service, 
-                        link: link, 
+                        link: finalLink, // هون بنبعت الرابط الجديد
                         qty: qty, 
                         date: new Date().toLocaleString() 
                     })
                 });
 
-                // بعد النجاح في الشيت
                 status.innerText = "✅ تم تسجيل الطلب في لوحة التحكم!";
                 status.style.color = "#27ae60";
                 btn.innerText = "تأكيد عبر واتساب 💬";
                 btn.style.background = "linear-gradient(45deg, #25D366, #128C7E)";
                 btn.disabled = false;
                 
-                // تغيير وظيفة الزر لفتح واتساب
                 btn.onclick = function() {
-                    const msg = `*طلب جديد من المصيبة*%0A*المستخدم:* ${user}%0A*الخدمة:* ${service}%0A*الرابط:* ${link}%0A*الكمية:* ${qty}`;
+                    const msg = `*طلب جديد من المصيبة*%0A*المستخدم:* ${user}%0A*الخدمة:* ${service}%0A*اليوزر:* ${inputVal}%0A*الرابط:* ${finalLink}%0A*الكمية:* ${qty}`;
                     window.location.href = `https://wa.me/972555630038?text=${msg}`;
                 };
 
