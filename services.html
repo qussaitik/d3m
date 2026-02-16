@@ -3,41 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الخدمات</title>
+    <title>خدمات المصيبة</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Tajawal', sans-serif; background: #0f0c29; color: white; text-align: center; padding: 40px 15px; }
-        h1 { font-size: 30px; margin-bottom: 40px; background: linear-gradient(to left, #00f2ea, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .grid { display: flex; flex-direction: column; gap: 20px; align-items: center; }
-        .service-card { 
-            background: rgba(255,255,255,0.08); 
-            padding: 40px 20px; border-radius: 20px; 
-            width: 90%; max-width: 350px;
-            border: 1px solid rgba(255,255,255,0.1); 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-        }
-        h3 { font-size: 28px; color: #00f2ea; margin: 0 0 10px 0; }
-        p { color: #ccc; font-size: 16px; margin: 0; }
+        body { font-family: 'Tajawal', sans-serif; background: #0f0c29; color: white; margin: 0; text-align: center; }
+        .user-header { background: rgba(255,255,255,0.05); backdrop-filter: blur(15px); padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); position: sticky; top: 0; z-index: 100; }
+        .balance-box { background: linear-gradient(45deg, #27ae60, #2ecc71); padding: 10px 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3); }
+        .grid { display: flex; flex-direction: column; gap: 20px; align-items: center; padding: 20px; }
+        .service-card { background: rgba(255,255,255,0.08); padding: 30px; border-radius: 20px; width: 85%; max-width: 350px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
     </style>
 </head>
 <body>
-    <h1>اختر الخدمة المطلوبة</h1>
-    <div class="grid">
-        <div class="service-card" onclick="sel('متابعين تيك توك')">
-            <h3>👤 المتابعين</h3>
-            <p>زيادة سريعة وجودة عالية</p>
-        </div>
-        <div class="service-card" onclick="sel('مشاهدات تيك توك')">
-            <h3>👁️ المشاهدات</h3>
-            <p>وصول أوسع لمحتواك</p>
-        </div>
-        <div class="service-card" onclick="sel('إعجابات تيك توك')">
-            <h3>❤️ التفاعل</h3>
-            <p>لايكات حقيقية وفورية</p>
-        </div>
+    <div class="user-header">
+        <div style="text-align: right;"><span>مرحباً،</span><br><b id="u-name">...</b></div>
+        <div class="balance-box"><small>رصيدك الحالي</small><br><b id="u-balance">$0.00</b></div>
     </div>
+    <h1>الخدمات المتاحة</h1>
+    <div class="grid">
+        <div class="service-card" onclick="sel('متابعين تيك توك')"><h3>👤 المتابعين</h3></div>
+        <div class="service-card" onclick="sel('مشاهدات تيك توك')"><h3>👁️ المشاهدات</h3></div>
+        <div class="service-card" onclick="sel('إعجابات تيك توك')"><h3>❤️ الإعجابات</h3></div>
+    </div>
+
     <script>
+        const scriptURL = "https://script.google.com/macros/s/AKfycbx-CzLtyGIJyoggh6GqSahiumRMrErOMAoXA1pjYdbECXp2PSEke1zXLyelzldXCxin/exec";
+        async function init() {
+            const user = sessionStorage.getItem('currentUser') || "زائر";
+            document.getElementById('u-name').innerText = user;
+            try {
+                const res = await fetch(scriptURL + "?action=getBalances");
+                const balances = await res.json();
+                document.getElementById('u-balance').innerText = "$" + (balances[user] || "0.00");
+            } catch (e) { document.getElementById('u-balance').innerText = "خطأ في الربط"; }
+        }
         function sel(n) { localStorage.setItem('chosenService', n); window.location.href = "order.html"; }
+        init();
     </script>
 </body>
 </html>
