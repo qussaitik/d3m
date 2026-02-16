@@ -3,51 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>خدمات المصيبة</title>
+    <title>المصيبة | خدماتنا</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Tajawal', sans-serif; background: #0f0c29; color: white; margin: 0; text-align: center; }
-        .user-header { background: rgba(255,255,255,0.05); backdrop-filter: blur(15px); padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); position: sticky; top: 0; z-index: 100; }
-        .balance-box { background: linear-gradient(45deg, #27ae60, #2ecc71); padding: 10px 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3); }
-        .grid { display: flex; flex-direction: column; gap: 20px; align-items: center; padding: 20px; }
-        .service-card { background: rgba(255,255,255,0.08); padding: 30px; border-radius: 20px; width: 85%; max-width: 350px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.3s; }
-        .service-card:hover { transform: scale(1.05); background: rgba(255,255,255,0.12); }
+        body { font-family: 'Tajawal', sans-serif; background: #05011a; color: white; margin: 0; overflow-x: hidden; }
+        .user-header { background: rgba(255,255,255,0.05); backdrop-filter: blur(15px); padding: 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ff00ff; position: sticky; top: 0; z-index: 100; animation: fadeInDown 0.8s; }
+        .balance-box { background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%); padding: 12px 25px; border-radius: 20px; box-shadow: 0 0 20px rgba(245,87,108,0.5); text-align: center; }
+        .grid { display: flex; flex-direction: column; gap: 25px; align-items: center; padding: 40px 20px; }
+        .service-card { background: rgba(255,255,255,0.07); padding: 40px; border-radius: 30px; width: 90%; max-width: 400px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; overflow: hidden; animation: zoomIn 0.5s both; }
+        .service-card:hover { transform: translateY(-10px) scale(1.05); background: rgba(255,255,255,0.15); border-color: #00f2ea; box-shadow: 0 0 30px rgba(0,242,234,0.3); }
+        .service-card h3 { font-size: 24px; margin: 0; }
+        h1 { font-size: 35px; text-shadow: 0 0 10px #ff00ff; margin-top: 20px; animation: bounceIn 1s; }
+        @keyframes fadeInDown { from { opacity:0; transform: translateY(-20px); } to { opacity:1; transform: translateY(0); } }
+        @keyframes zoomIn { from { opacity:0; transform: scale(0.5); } to { opacity:1; transform: scale(1); } }
+        @keyframes bounceIn { 0% { transform: scale(0.1); opacity: 0; } 60% { transform: scale(1.2); opacity: 1; } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
     <div class="user-header">
-        <div style="text-align: right;"><span>مرحباً،</span><br><b id="u-name">...</b></div>
-        <div class="balance-box"><small>رصيدك الحالي</small><br><b id="u-balance">$---</b></div>
+        <div style="text-align: right;"><span>مرحباً بالأميرة،</span><br><b id="u-name" style="font-size: 22px; color: #00f2ea;">...</b></div>
+        <div class="balance-box"><small>رصيدك الملكي</small><br><b id="u-balance" style="font-size: 24px;">$---</b></div>
     </div>
-    <h1>الخدمات المتاحة</h1>
+    <h1>👑 اختاري فخامتك</h1>
     <div class="grid">
-        <div class="service-card" onclick="sel('متابعين تيك توك')"><h3>👤 المتابعين</h3></div>
-        <div class="service-card" onclick="sel('مشاهدات تيك توك')"><h3>👁️ المشاهدات</h3></div>
-        <div class="service-card" onclick="sel('إعجابات تيك توك')"><h3>❤️ الإعجابات</h3></div>
+        <div class="service-card" style="animation-delay: 0.2s" onclick="sel('متابعين تيك توك')"><h3>👤 جيش المتابعين</h3></div>
+        <div class="service-card" style="animation-delay: 0.4s" onclick="sel('مشاهدات تيك توك')"><h3>👁️ انفجار المشاهدات</h3></div>
+        <div class="service-card" style="animation-delay: 0.6s" onclick="sel('إعجابات تيك توك')"><h3>❤️ بحر الإعجابات</h3></div>
     </div>
-
     <script>
         const scriptURL = "https://script.google.com/macros/s/AKfycbx-CzLtyGIJyoggh6GqSahiumRMrErOMAoXA1pjYdbECXp2PSEke1zXLyelzldXCxin/exec";
-
         async function init() {
-            const user = sessionStorage.getItem('currentUser') || "زائر";
+            const user = sessionStorage.getItem('currentUser') || "زائرة";
             document.getElementById('u-name').innerText = user;
-
-            // عرض الرصيد المخزن فوراً للسرعة
             const cached = localStorage.getItem('bal_' + user);
             if (cached) document.getElementById('u-balance').innerText = "$" + cached;
-
             try {
-                // تحديث الرصيد من الشيت بالخلفية
                 const res = await fetch(scriptURL + "?action=getBalances");
                 const balances = await res.json();
                 const newBal = balances[user] || "0.00";
-                
                 document.getElementById('u-balance').innerText = "$" + newBal;
-                localStorage.setItem('bal_' + user, newBal); // تخزينه للمرة الجاية
-            } catch (e) { console.log("Backend update failed"); }
+                localStorage.setItem('bal_' + user, newBal);
+            } catch (e) {}
         }
-        
         function sel(n) { localStorage.setItem('chosenService', n); window.location.href = "order.html"; }
         init();
     </script>
