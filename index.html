@@ -17,7 +17,6 @@
             overflow: hidden;
         }
 
-        /* توهج خلفية نيون */
         .bg-glow {
             position: absolute;
             width: 400px;
@@ -53,7 +52,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-weight: 900;
-            letter-spacing: 2px;
         }
 
         input {
@@ -73,7 +71,6 @@
 
         input:focus {
             border-color: #00f2ea;
-            background: rgba(255, 255, 255, 0.15);
             box-shadow: 0 0 15px rgba(0, 242, 234, 0.3);
         }
 
@@ -88,13 +85,6 @@
             font-size: 20px;
             cursor: pointer;
             transition: 0.4s;
-            box-shadow: 0 8px 20px rgba(0, 242, 234, 0.2);
-        }
-
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 25px rgba(0, 242, 234, 0.4);
-            filter: brightness(1.1);
         }
 
         @keyframes slideUp {
@@ -110,21 +100,31 @@
     <div class="login-card">
         <h1>المُصيبة</h1>
         <input type="text" id="user" placeholder="اسم الأميرة">
-        <input type="password" id="pass" placeholder="كلمة السر">
-        <button onclick="login()">دخول المنصة ✨</button>
+        <input type="text" id="pass" placeholder="كلمة السر"> <button onclick="login()">دخول المنصة ✨</button>
     </div>
 
     <script>
-        function login() {
-            const u = document.getElementById('user').value.trim();
-            const p = document.getElementById('pass').value.trim();
+        // دالة تحويل الأرقام العربية لإنجليزية
+        const fixNumbers = (str) => {
+            return str.replace(/[٠-٩]/g, (d) => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
+        };
 
-            // الباسوورد المعتمد 2026 كما طلبت يا قصي
-            if((u === "نجلاء" || u === "ورده") && p === "2026") {
+        function login() {
+            let u = document.getElementById('user').value.trim();
+            let p = document.getElementById('pass').value.trim();
+
+            // تحويل الباسورد لو كان مكتوب بالعربي
+            p = fixNumbers(p);
+
+            const isNaglaa = (u === "نجلاء");
+            const isWarda = (u === "ورده" || u === "وردة");
+            const isCorrectPass = (p === "2026");
+
+            if ((isNaglaa || isWarda) && isCorrectPass) {
                 sessionStorage.setItem('currentUser', u);
                 window.location.href = "services.html";
             } else {
-                alert("بياناتك غلط يا أميرة، تأكدي من الاسم وكلمة السر! 👑");
+                alert("البيانات غلط يا أميرة.. تأكدي إن الباسوورد ٢٠٢٦ والاسم صح 👑");
             }
         }
     </script>
