@@ -10,13 +10,14 @@
         .user-header { background: rgba(255,255,255,0.05); backdrop-filter: blur(15px); padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); position: sticky; top: 0; z-index: 100; }
         .balance-box { background: linear-gradient(45deg, #27ae60, #2ecc71); padding: 10px 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3); }
         .grid { display: flex; flex-direction: column; gap: 20px; align-items: center; padding: 20px; }
-        .service-card { background: rgba(255,255,255,0.08); padding: 30px; border-radius: 20px; width: 85%; max-width: 350px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; }
+        .service-card { background: rgba(255,255,255,0.08); padding: 30px; border-radius: 20px; width: 85%; max-width: 350px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.3s; }
+        .service-card:hover { transform: scale(1.05); background: rgba(255,255,255,0.12); }
     </style>
 </head>
 <body>
     <div class="user-header">
         <div style="text-align: right;"><span>مرحباً،</span><br><b id="u-name">...</b></div>
-        <div class="balance-box"><small>رصيدك الحالي</small><br><b id="u-balance">$0.00</b></div>
+        <div class="balance-box"><small>رصيدك الحالي</small><br><b id="u-balance">$---</b></div>
     </div>
     <h1>الخدمات المتاحة</h1>
     <div class="grid">
@@ -27,15 +28,26 @@
 
     <script>
         const scriptURL = "https://script.google.com/macros/s/AKfycbx-CzLtyGIJyoggh6GqSahiumRMrErOMAoXA1pjYdbECXp2PSEke1zXLyelzldXCxin/exec";
+
         async function init() {
             const user = sessionStorage.getItem('currentUser') || "زائر";
             document.getElementById('u-name').innerText = user;
+
+            // عرض الرصيد المخزن فوراً للسرعة
+            const cached = localStorage.getItem('bal_' + user);
+            if (cached) document.getElementById('u-balance').innerText = "$" + cached;
+
             try {
+                // تحديث الرصيد من الشيت بالخلفية
                 const res = await fetch(scriptURL + "?action=getBalances");
                 const balances = await res.json();
-                document.getElementById('u-balance').innerText = "$" + (balances[user] || "0.00");
-            } catch (e) { document.getElementById('u-balance').innerText = "خطأ في الربط"; }
+                const newBal = balances[user] || "0.00";
+                
+                document.getElementById('u-balance').innerText = "$" + newBal;
+                localStorage.setItem('bal_' + user, newBal); // تخزينه للمرة الجاية
+            } catch (e) { console.log("Backend update failed"); }
         }
+        
         function sel(n) { localStorage.setItem('chosenService', n); window.location.href = "order.html"; }
         init();
     </script>
