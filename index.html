@@ -3,153 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دخول | عالم المصيبة</title>
+    <title>دخول آمن | عالم المصيبة</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;800;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #6c5ce7;
-            --secondary: #00cec9;
-            --bg: #f8f9fd;
-            --text: #2d3436;
-        }
-
-        body { 
-            font-family: 'Tajawal', sans-serif; 
-            background: var(--bg); 
-            margin: 0; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        /* كرت الدخول */
-        .login-card {
-            background: white;
-            padding: 40px;
-            border-radius: 30px;
-            box-shadow: 0 20px 40px rgba(108, 92, 231, 0.1);
-            width: 90%;
-            max-width: 380px;
-            text-align: center;
-            border: 1px solid #edf2f7;
-            position: relative;
-        }
-
-        .logo-area {
-            font-size: 50px;
-            margin-bottom: 20px;
-        }
-
-        h2 {
-            color: var(--text);
-            font-weight: 900;
-            margin-bottom: 10px;
-            font-size: 24px;
-        }
-
-        p {
-            color: #636e72;
-            font-size: 15px;
-            margin-bottom: 30px;
-        }
-
-        .input-box {
-            position: relative;
-            margin-bottom: 25px;
-        }
-
-        input {
-            width: 100%;
-            padding: 15px;
-            border-radius: 15px;
-            border: 2px solid #f1f2f6;
-            font-family: 'Tajawal', sans-serif;
-            font-size: 16px;
-            text-align: center;
-            transition: 0.3s;
-            box-sizing: border-box;
-            background: #fdfdfd;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: white;
-            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.05);
-        }
-
-        .btn-login {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            border-radius: 15px;
-            font-size: 18px;
-            font-weight: 900;
-            cursor: pointer;
-            transition: 0.4s;
-            box-shadow: 0 8px 20px rgba(108, 92, 231, 0.2);
-        }
-
-        .btn-login:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 25px rgba(108, 92, 231, 0.3);
-            opacity: 0.9;
-        }
-
-        /* زينة خلفية */
-        .circle {
-            position: absolute;
-            width: 200px;
-            height: 200px;
-            background: linear-gradient(var(--primary), var(--secondary));
-            border-radius: 50%;
-            z-index: -1;
-            filter: blur(80px);
-            opacity: 0.2;
-        }
+        :root { --primary: #6c5ce7; --secondary: #00cec9; --bg: #f8f9fd; --text: #2d3436; }
+        body { font-family: 'Tajawal', sans-serif; background: var(--bg); margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        .login-card { background: white; padding: 40px; border-radius: 30px; box-shadow: 0 20px 40px rgba(108,92,231,0.1); width: 90%; max-width: 380px; text-align: center; border: 1px solid #edf2f7; z-index: 10; }
+        .logo-area { font-size: 50px; margin-bottom: 20px; }
+        h2 { color: var(--text); font-weight: 900; margin-bottom: 10px; }
+        p { color: #636e72; font-size: 15px; margin-bottom: 30px; }
+        input { width: 100%; padding: 15px; border-radius: 15px; border: 2px solid #f1f2f6; font-family: 'Tajawal', sans-serif; font-size: 16px; text-align: center; transition: 0.3s; box-sizing: border-box; background: #fdfdfd; margin-bottom: 10px; }
+        input:focus { outline: none; border-color: var(--primary); background: white; }
+        .btn-login { width: 100%; padding: 15px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; border-radius: 15px; font-size: 18px; font-weight: 900; cursor: pointer; transition: 0.4s; box-shadow: 0 8px 20px rgba(108,92,231,0.2); }
+        .btn-login:hover { transform: translateY(-3px); box-shadow: 0 12px 25px rgba(108,92,231,0.3); }
+        .circle { position: absolute; width: 300px; height: 300px; background: linear-gradient(var(--primary), var(--secondary)); border-radius: 50%; z-index: 1; filter: blur(80px); opacity: 0.15; }
     </style>
 </head>
 <body>
-
-    <div class="circle" style="top: -50px; left: -50px;"></div>
-    <div class="circle" style="bottom: -50px; right: -50px;"></div>
-
+    <div class="circle" style="top: -100px; left: -100px;"></div>
+    <div class="circle" style="bottom: -100px; right: -100px;"></div>
     <div class="login-card">
-        <div class="logo-area">✨</div>
-        <h2>أهلاً بك معنا</h2>
-        <p>يسعدنا انضمامك إلينا، يرجى إدخال اسمك للبدء في اكتشاف خدماتنا</p>
-
-        <div class="input-box">
-            <input type="text" id="userName" placeholder="أدخل اسمك الكريم هنا">
-        </div>
-
-        <button class="btn-login" onclick="start()">دخول للموقع</button>
-        
-        <div style="margin-top: 20px; font-size: 12px; color: #b2bec3;">
-            نحن هنا لتعزيز حضورك الرقمي بكل حب 🤍
-        </div>
+        <div class="logo-area">🔐</div>
+        <h2>منطقة خاصة</h2>
+        <p>لطفاً، أدخل بياناتك للوصول إلى الخدمات</p>
+        <input type="text" id="userName" placeholder="اسمك الكريم">
+        <input type="password" id="passCode" placeholder="كلمة المرور">
+        <button class="btn-login" onclick="checkAccess()">فتح الخدمات</button>
     </div>
-
     <script>
-        function start() {
+        sessionStorage.clear();
+        function checkAccess() {
             const name = document.getElementById('userName').value.trim();
-            if (name) {
-                // حفظ الاسم في الجلسة للتعامل معه في باقي الصفحات
+            const pass = document.getElementById('passCode').value.trim();
+            if (!name) return alert("لطفاً أدخل اسمك");
+            if (pass === "159159") {
                 sessionStorage.setItem('currentUser', name);
                 window.location.href = "services.html";
-            } else {
-                alert("لطفاً، نحتاج لمعرفة اسمك لتقديم أفضل تجربة لك.");
-            }
+            } else { alert("كلمة المرور غير صحيحة!"); }
         }
-
-        // الدخول بمجرد الضغط على Enter
-        document.getElementById('userName').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') start();
-        });
     </script>
 </body>
 </html>
