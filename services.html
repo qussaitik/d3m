@@ -2,38 +2,45 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>خدماتنا</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;900&display=swap" rel="stylesheet">
+    <title>عالم المصيبة | الخدمات</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;800;900&display=swap" rel="stylesheet">
     <style>
-        :root { --p: #6c5ce7; --s: #00cec9; }
-        body { font-family: 'Tajawal', sans-serif; background: #f8f9fd; margin: 0; }
-        .header { background: white; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .bal { background: linear-gradient(135deg, var(--p), var(--s)); color: white; padding: 5px 15px; border-radius: 10px; font-weight: 900; }
-        .grid { display: grid; grid-template-columns: 1fr; gap: 15px; padding: 20px; max-width: 500px; margin: auto; }
-        .item { background: white; padding: 20px; border-radius: 20px; text-align: center; cursor: pointer; border: 1px solid #eee; transition: 0.3s; }
-        .item:hover { transform: translateY(-5px); border-color: var(--p); }
+        :root { --p: #6c5ce7; --s: #00cec9; --bg: #f4f7fe; }
+        body { font-family: 'Tajawal', sans-serif; background: var(--bg); margin: 0; padding-bottom: 50px; }
+        .header { background: white; padding: 20px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; border-bottom: 2px solid var(--p); }
+        .user-info b { color: var(--p); font-size: 20px; display: block; font-weight: 900; }
+        .balance-card { background: linear-gradient(135deg, var(--p), var(--s)); color: white; padding: 10px 25px; border-radius: 18px; text-align: center; box-shadow: 0 8px 15px rgba(108, 92, 231, 0.3); }
+        h1 { text-align: center; color: #2d3436; font-weight: 900; margin: 40px 0 20px; font-size: 32px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; padding: 20px; max-width: 1100px; margin: auto; }
+        .card { background: white; padding: 35px; border-radius: 30px; text-align: center; cursor: pointer; border: 1px solid #eee; transition: 0.4s; box-shadow: 0 10px 25px rgba(0,0,0,0.03); position: relative; overflow: hidden; }
+        .card:hover { transform: translateY(-10px); border-color: var(--p); box-shadow: 0 20px 40px rgba(108, 92, 231, 0.15); }
+        .card i { font-size: 50px; margin-bottom: 20px; display: block; }
+        .card h3 { font-size: 22px; margin: 10px 0; color: #2d3436; }
+        .price-tag { color: var(--s); font-weight: 800; font-size: 14px; background: #f0fdfd; padding: 5px 12px; border-radius: 10px; display: inline-block; }
     </style>
 </head>
 <body>
     <script>if(!sessionStorage.getItem('currentUser')) window.location.href="index.html";</script>
     <div class="header">
-        <div>أهلاً، <b id="u"></b></div>
-        <div class="bal" id="b">⏳</div>
+        <div class="user-info"><span>مرحباً بك،</span><b id="u">...</b></div>
+        <div class="balance-card"><small>رصيدك المتوفر</small><div id="b" style="font-size: 24px; font-weight: 900;">$0.00</div></div>
     </div>
-    <h2 style="text-align:center; color:var(--p)">خدماتنا المميزة ✨</h2>
+    <h1>اختاري خدمتك الملكية ✨</h1>
     <div class="grid">
-        <div class="item" onclick="go('متابعين تيك توك')">👤 متابعين تيك توك</div>
-        <div class="item" onclick="go('مشاهدات تيك توك')">👁️ مشاهدات تيك توك</div>
-        <div class="item" onclick="go('إعجابات تيك توك')">❤️ إعجابات تيك توك</div>
+        <div class="card" onclick="go('متابعين تيك توك')"><i>👤</i><h3>متابعين تيك توك</h3><span class="price-tag">الـ 1000 بـ 5$</span></div>
+        <div class="card" onclick="go('مشاهدات تيك توك')"><i>👁️</i><h3>مشاهدات تيك توك</h3><span class="price-tag">الـ 10,000 بـ 1$</span></div>
+        <div class="card" onclick="go('إعجابات تيك توك')"><i>❤️</i><h3>إعجابات تيك توك</h3><span class="price-tag">الـ 10,000 بـ 1$</span></div>
     </div>
     <script>
-        const url = "https://script.google.com/macros/s/AKfycbz33uo9f-5eVXAFaI6qfk5ce-mgSX-tQ0q7HjDlYFa4akBvn3NuaUh5fuqYYMc1FEA/exec";
+        const url = "https://script.google.com/macros/s/AKfycbxCZH5YiykKS0_PS4rs2nsUbXDiXZfBelymkvieUeupMdJO4VxTsyTcn80sEdT6gO5o/exec";
         const user = sessionStorage.getItem('currentUser');
         document.getElementById('u').innerText = user;
         async function load() {
-            const r = await fetch(url + "?action=getBalances");
-            const d = await r.json();
-            document.getElementById('b').innerText = "$" + (d[user] || "0.00");
+            try {
+                const r = await fetch(url + "?action=getBalances");
+                const d = await r.json();
+                document.getElementById('b').innerText = "$" + (parseFloat(d[user] || 0).toFixed(2));
+            } catch(e) { console.error(e); }
         }
         function go(s) { localStorage.setItem('chosenService', s); window.location.href="order.html"; }
         load();
