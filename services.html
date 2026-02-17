@@ -1,49 +1,100 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>عالم المصيبة | الخدمات</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;800;900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قائمة الخدمات</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --p: #6c5ce7; --s: #00cec9; --bg: #f4f7fe; }
-        body { font-family: 'Tajawal', sans-serif; background: var(--bg); margin: 0; padding-bottom: 50px; }
-        .header { background: white; padding: 20px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; border-bottom: 2px solid var(--p); }
-        .user-info b { color: var(--p); font-size: 20px; display: block; font-weight: 900; }
-        .balance-card { background: linear-gradient(135deg, var(--p), var(--s)); color: white; padding: 10px 25px; border-radius: 18px; text-align: center; box-shadow: 0 8px 15px rgba(108, 92, 231, 0.3); }
-        h1 { text-align: center; color: #2d3436; font-weight: 900; margin: 40px 0 20px; font-size: 32px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; padding: 20px; max-width: 1100px; margin: auto; }
-        .card { background: white; padding: 35px; border-radius: 30px; text-align: center; cursor: pointer; border: 1px solid #eee; transition: 0.4s; box-shadow: 0 10px 25px rgba(0,0,0,0.03); position: relative; overflow: hidden; }
-        .card:hover { transform: translateY(-10px); border-color: var(--p); box-shadow: 0 20px 40px rgba(108, 92, 231, 0.15); }
-        .card i { font-size: 50px; margin-bottom: 20px; display: block; }
-        .card h3 { font-size: 22px; margin: 10px 0; color: #2d3436; }
-        .price-tag { color: var(--s); font-weight: 800; font-size: 14px; background: #f0fdfd; padding: 5px 12px; border-radius: 10px; display: inline-block; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Tajawal', sans-serif; background: var(--bg); padding-bottom: 40px; }
+        
+        .navbar { 
+            background: white; padding: 20px; display: flex; 
+            justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100;
+        }
+        .user-tag { font-size: 14px; color: #636e72; }
+        .user-tag b { color: var(--p); font-size: 18px; display: block; }
+        
+        .balance-box { 
+            background: linear-gradient(135deg, var(--p), var(--s)); 
+            color: white; padding: 10px 20px; border-radius: 15px; 
+            text-align: center; box-shadow: 0 5px 15px rgba(108, 92, 231, 0.2);
+        }
+
+        .main-title { text-align: center; margin: 40px 0 20px; color: #2d3436; font-weight: 900; }
+
+        .services-grid { 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 20px; padding: 0 20px; max-width: 1000px; margin: auto; 
+        }
+
+        .service-card { 
+            background: white; padding: 30px; border-radius: 25px; 
+            text-align: center; cursor: pointer; border: 1px solid #edf2f7;
+            transition: all 0.3s ease; box-shadow: 0 10px 20px rgba(0,0,0,0.02);
+        }
+        .service-card:hover { 
+            transform: translateY(-5px); border-color: var(--p);
+            box-shadow: 0 15px 30px rgba(108, 92, 231, 0.1);
+        }
+        .icon-circle { 
+            width: 70px; height: 70px; background: #f0eeff; 
+            border-radius: 50%; display: flex; align-items: center; 
+            justify-content: center; margin: 0 auto 20px; font-size: 30px;
+        }
+        .service-card h3 { color: #2d3436; margin-bottom: 10px; }
+        .service-card p { color: #b2bec3; font-size: 14px; font-weight: 700; }
     </style>
 </head>
 <body>
     <script>if(!sessionStorage.getItem('currentUser')) window.location.href="index.html";</script>
-    <div class="header">
-        <div class="user-info"><span>مرحباً بك،</span><b id="u">...</b></div>
-        <div class="balance-card"><small>رصيدك المتوفر</small><div id="b" style="font-size: 24px; font-weight: 900;">$0.00</div></div>
+    
+    <div class="navbar">
+        <div class="user-tag">أهلاً بك،<b id="u">المستخدم</b></div>
+        <div class="balance-box"><small>الرصيد المتوفر</small><div id="b" style="font-size: 20px; font-weight: 900;">$0.00</div></div>
     </div>
-    <h1>اختاري خدمتك الملكية ✨</h1>
-    <div class="grid">
-        <div class="card" onclick="go('متابعين تيك توك')"><i>👤</i><h3>متابعين تيك توك</h3><span class="price-tag">الـ 1000 بـ 5$</span></div>
-        <div class="card" onclick="go('مشاهدات تيك توك')"><i>👁️</i><h3>مشاهدات تيك توك</h3><span class="price-tag">الـ 10,000 بـ 1$</span></div>
-        <div class="card" onclick="go('إعجابات تيك توك')"><i>❤️</i><h3>إعجابات تيك توك</h3><span class="price-tag">الـ 10,000 بـ 1$</span></div>
+
+    <h1 class="main-title">اختر الخدمة المطلوبة ✨</h1>
+
+    <div class="services-grid">
+        <div class="service-card" onclick="navigateTo('متابعين تيك توك')">
+            <div class="icon-circle">👤</div>
+            <h3>متابعين تيك توك</h3>
+            <p>سعر الـ 1000 متابع: 5$</p>
+        </div>
+        <div class="service-card" onclick="navigateTo('مشاهدات تيك توك')">
+            <div class="icon-circle">👁️</div>
+            <h3>مشاهدات تيك توك</h3>
+            <p>سعر الـ 10,000 مشاهدة: 1$</p>
+        </div>
+        <div class="service-card" onclick="navigateTo('إعجابات تيك توك')">
+            <div class="icon-circle">❤️</div>
+            <h3>إعجابات تيك توك</h3>
+            <p>سعر الـ 10,000 إعجاب: 1$</p>
+        </div>
     </div>
+
     <script>
         const url = "https://script.google.com/macros/s/AKfycbxCZH5YiykKS0_PS4rs2nsUbXDiXZfBelymkvieUeupMdJO4VxTsyTcn80sEdT6gO5o/exec";
         const user = sessionStorage.getItem('currentUser');
         document.getElementById('u').innerText = user;
-        async function load() {
+
+        async function fetchBalance() {
             try {
-                const r = await fetch(url + "?action=getBalances");
-                const d = await r.json();
-                document.getElementById('b').innerText = "$" + (parseFloat(d[user] || 0).toFixed(2));
-            } catch(e) { console.error(e); }
+                const response = await fetch(url + "?action=getBalances");
+                const data = await response.json();
+                document.getElementById('b').innerText = "$" + (parseFloat(data[user] || 0).toFixed(2));
+            } catch(e) { console.error("Error fetching balance"); }
         }
-        function go(s) { localStorage.setItem('chosenService', s); window.location.href="order.html"; }
-        load();
+
+        function navigateTo(serviceName) {
+            localStorage.setItem('chosenService', serviceName);
+            window.location.href = "order.html";
+        }
+        fetchBalance();
     </script>
 </body>
 </html>
