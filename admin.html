@@ -2,117 +2,83 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة الإدارة | المُصيبة</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700&display=swap" rel="stylesheet">
     <style>
-        /* ستايل الصفحة */
-        #admin-lock { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #05011a; display: flex; justify-content: center; align-items: center; z-index: 10000; flex-direction: column; }
-        .login-box { background: rgba(255,255,255,0.05); padding: 40px; border-radius: 25px; text-align: center; border: 1px solid #00f2ea; width: 90%; max-width: 350px; }
-        .login-box input { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 12px; border: none; text-align: center; font-size: 18px; }
-        .btn-enter { width: 100%; padding: 15px; border-radius: 12px; border: none; background: linear-gradient(45deg, #00f2ea, #667eea); color: white; font-weight: 900; cursor: pointer; }
+        body { font-family: 'Tajawal', sans-serif; background: #05011a; color: white; text-align: center; padding: 20px; }
+        .login-box { background: #1a1c23; padding: 30px; border-radius: 20px; border: 2px solid #00f2ea; display: inline-block; margin-top: 100px; }
+        input { padding: 12px; margin: 10px; border-radius: 8px; border: none; text-align: center; width: 250px; font-size: 18px; }
+        button { padding: 12px 30px; background: #00f2ea; color: black; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; }
         #admin-main { display: none; }
-        body { font-family: 'Tajawal', sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
-        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 25px; }
-        .user-row { display: flex; align-items: center; justify-content: space-between; padding: 15px; background: #fafafa; border-radius: 12px; margin-bottom: 10px; border: 1px solid #eee; }
-        .balance-badge { background: #e8f5e9; color: #2e7d32; padding: 8px 15px; border-radius: 10px; font-weight: 900; min-width: 50px; text-align: center; }
-        .balance-input { width: 70px !important; padding: 8px; border: 1px solid #ddd; border-radius: 8px; text-align: center; }
-        button { padding: 8px 12px; border: none; border-radius: 8px; cursor: pointer; color: white; font-weight: bold; transition: 0.3s; }
-        .btn-add { background: #27ae60; } .btn-sub { background: #e74c3c; }
-        button:hover { transform: scale(1.1); opacity: 0.9; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th { background: #302b63; color: white; padding: 12px; text-align: right; }
-        td { padding: 12px; border-bottom: 1px solid #eee; font-size: 14px; }
-        .status-msg { font-size: 12px; color: #666; text-align: center; margin-top: 10px; }
+        .card { background: #1f222b; padding: 20px; border-radius: 15px; margin-top: 20px; border: 1px solid #333; max-width: 500px; margin-left: auto; margin-right: auto; }
+        .user-row { display: flex; justify-content: space-between; align-items: center; background: #2a2e38; padding: 10px; border-radius: 10px; margin-bottom: 8px; }
     </style>
 </head>
 <body>
 
     <div id="admin-lock">
         <div class="login-box">
-            <h2 style="color:white; margin-bottom: 20px;">دخول المدير 🛡️</h2>
-            <input type="text" id="admUser" placeholder="اسم المستخدم">
-            <input type="password" id="admPass" placeholder="كلمة السر">
-            <button class="btn-enter" onclick="validateAdmin()">دخول</button>
+            <h2>دخول المدير 🛡️</h2>
+            <input type="password" id="passInput" placeholder="أدخل كلمة السر">
+            <br>
+            <button onclick="checkPass()">دخول مباشر</button>
         </div>
     </div>
 
     <div id="admin-main">
         <div class="card">
-            <h3>💰 أرصدة الملكات</h3>
-            <div id="balances-container">جاري جلب البيانات من السيرفر...</div>
-            <div id="last-update" class="status-msg"></div>
-        </div>
-
-        <div class="card">
-            <h3>📦 سجل الطلبات الأخير</h3>
-            <div style="overflow-x: auto;">
-                <table>
-                    <thead>
-                        <tr><th>الأميرة</th><th>الخدمة</th><th>الكمية</th><th>الرابط</th><th>التاريخ</th></tr>
-                    </thead>
-                    <tbody id="list">
-                        <tr><td colspan="5" style="text-align:center">جاري تحميل الطلبات...</td></tr>
-                    </tbody>
-                </table>
-            </div>
+            <h3 style="color: #00f2ea;">💰 أرصدة الملكات</h3>
+            <div id="balances-container">جاري التحميل...</div>
         </div>
     </div>
 
     <script>
-        // الرابط الجديد تبعك يا قصي
+        // الرابط الجديد تبعك
         const scriptURL = "https://script.google.com/macros/s/AKfycbwUT0hkoVkAAPo9TeWIOYoQVMJPtrWDnMNorramxeusX4UPHPlwREE7ti3zGsaHj7Lk/exec";
-        
-        function validateAdmin() {
-            const user = document.getElementById('admUser').value;
-            const pass = document.getElementById('admPass').value;
-            if (user === "admin" && pass === "0598787757") {
+        const SECRET = "0598787757"; // كلمة السر
+
+        function checkPass() {
+            const input = document.getElementById('passInput').value;
+            if (input === SECRET) {
                 document.getElementById('admin-lock').style.display = 'none';
                 document.getElementById('admin-main').style.display = 'block';
                 loadData();
-                setInterval(loadData, 30000); // تحديث كل 30 ثانية
             } else {
-                alert("البيانات غلط يا مدير!");
+                alert("الباسوورد غلط يا قصي!");
             }
         }
 
         async function loadData() {
             try {
-                // جلب الأرصدة والطلبات مع معالجة الأخطاء
-                const balRes = await fetch(scriptURL + "?action=getBalances").then(r => r.json()).catch(e => ({}));
-                const ordRes = await fetch(scriptURL + "?action=getOrders").then(r => r.json()).catch(e => []);
-
-                const balContainer = document.getElementById('balances-container');
-                balContainer.innerHTML = "";
+                const res = await fetch(scriptURL + "?action=getBalances");
+                const balances = await res.json();
+                const container = document.getElementById('balances-container');
+                container.innerHTML = "";
                 
-                // قائمة البنات (تأكد من وجودهم في الشيت بنفس السبيلنج)
-                const users = ['نجلاء', 'ورده', 'مرح'];
-
-                users.forEach(u => {
-                    let b = (balRes && balRes[u] !== undefined) ? balRes[u] : "0";
-                    balContainer.innerHTML += `
+                ['نجلاء', 'ورده', 'مرح'].forEach(u => {
+                    let b = balances[u] || 0;
+                    container.innerHTML += `
                         <div class="user-row">
-                            <b>👑 ${u}</b>
-                            <div class="balance-badge" id="val_${u}">$${b}</div>
+                            <span>👑 ${u}</span>
+                            <b style="color:cyan">$${b}</b>
                             <div>
-                                <input type="number" id="amt_${u}" class="balance-input" placeholder="0">
-                                <button class="btn-add" onclick="updateBal('${u}','add')">إضافة</button>
-                                <button class="btn-sub" onclick="updateBal('${u}','sub')">سحب</button>
+                                <input type="number" id="amt_${u}" style="width:60px; padding:5px;" placeholder="0">
+                                <button style="padding:5px 10px; background:green; color:white;" onclick="updateBal('${u}','add')">+</button>
+                                <button style="padding:5px 10px; background:red; color:white;" onclick="updateBal('${u}','sub')">-</button>
                             </div>
                         </div>`;
                 });
+            } catch (e) {
+                console.log("Error loading");
+            }
+        }
 
-                // تحديث جدول الطلبات
-                const listBody = document.getElementById('list');
-                if (ordRes && ordRes.length > 0) {
-                    listBody.innerHTML = ordRes.reverse().slice(0, 20).map(o => `
-                        <tr>
-                            <td><b>${o.user}</b></td>
-                            <td>${o.service}</td>
-                            <td>${o.qty}</td>
-                            <td><a href="${o.link}" target="_blank" style="color:#3498db">فتح</a></td>
-                            <td><small>${o.date}</small></td>
-                        </tr>
-                    `).join('');
-                } else {
-                    listBody.innerHTML = "<tr><td colspan='5' style='text-align:center'>لا يوجد طلبات حالياً</td></tr>";
+        async function updateBal(u, t) {
+            const val = document.getElementById('amt_'+u).value;
+            if(!val) return;
+            await fetch(scriptURL, { method: "POST", mode: "no-cors", body: JSON.stringify({ action: "updateBalance", user: u, amount: val, type: t }) });
+            setTimeout(loadData, 2000);
+        }
+    </script>
+</body>
+</html>
