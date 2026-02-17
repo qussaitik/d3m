@@ -1,152 +1,49 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم | المصيبة</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;800;900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8"><title>المدير</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #6c5ce7;
-            --secondary: #00cec9;
-            --bg: #f8f9fd;
-            --card-bg: #ffffff;
-            --text: #2d3436;
-        }
-
-        body { font-family: 'Tajawal', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; text-align: center; }
-        
-        #admin-lock { position: fixed; inset: 0; background: var(--bg); display: flex; justify-content: center; align-items: center; z-index: 10000; }
-        .login-box { background: white; padding: 40px; border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); width: 320px; border: 1px solid #edf2f7; }
-        
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 12px; border: 2px solid #f1f2f6; text-align: center; font-family: 'Tajawal'; box-sizing: border-box; }
-        .btn-main { width: 100%; padding: 12px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 800; }
-
-        #admin-main { display: none; max-width: 700px; margin: auto; }
-        .card { background: white; padding: 25px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #edf2f7; }
-        
-        .user-row { 
-            display: flex; justify-content: space-between; align-items: center; 
-            background: #fcfcfd; padding: 15px; border-radius: 15px; margin-bottom: 10px; 
-            border: 1px solid #f1f2f6; transition: 0.3s;
-        }
-        .user-row:hover { border-color: var(--primary); }
-
-        .bal-val { color: var(--primary); font-size: 20px; font-weight: 900; min-width: 80px; }
-        .controls { display: flex; align-items: center; gap: 5px; }
-        .amt-input { width: 70px !important; margin: 0 !important; padding: 8px !important; }
-        
-        .btn-add { background: #2ecc71; color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        .btn-sub { background: #e74c3c; color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        
-        .status { font-size: 12px; color: #b2bec3; margin-top: 10px; }
+        body { font-family: 'Tajawal', sans-serif; background: #f8f9fd; padding: 20px; text-align: center; }
+        .card { background: white; padding: 20px; border-radius: 20px; max-width: 600px; margin: 10px auto; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 10px 0; }
+        input { width: 60px; padding: 5px; }
+        button { cursor: pointer; border-radius: 5px; border: none; }
     </style>
 </head>
 <body>
-
-    <div id="admin-lock">
-        <div class="login-box">
-            <h2 style="color: var(--primary)">دخول الإدارة 🛡️</h2>
-            <input type="password" id="adminPass" placeholder="كلمة السر الخاصة">
-            <button class="btn-main" onclick="login()">دخول</button>
+    <div id="lock">
+        <input type="password" id="p" placeholder="كلمة سر المدير"><button onclick="login()">دخول</button>
+    </div>
+    <div id="main" style="display:none">
+        <div class="card">
+            <h3>💰 الأرصدة</h3>
+            <div id="list"></div>
+        </div>
+        <div class="card">
+            <h3>📦 السجل <button onclick="clearAll()" style="background:red; color:white">مسح الكل</button></h3>
+            <div id="orders" style="text-align:right; font-size:12px"></div>
         </div>
     </div>
-
-    <div id="admin-main">
-        <div class="card">
-            <h2 style="color: var(--primary); margin-top: 0;">💰 إدارة أرصدة المستخدمين</h2>
-            <p style="font-size: 14px; color: #636e72;">أي اسم تضيفه في الشيت سيظهر هنا تلقائياً</p>
-            <div id="users-list">جاري تحميل البيانات... 🔃</div>
-            <div class="status" id="last-sync"></div>
-        </div>
-
-        <div class="card">
-            <h3 style="color: var(--text)">📦 السجل الأخير</h3>
-            <div id="orders-list" style="font-size: 13px; text-align: right;"></div>
-        </div>
-        
-        <button onclick="location.reload()" style="background:none; border:none; color:var(--primary); cursor:pointer; font-weight:bold;">🔄 تحديث البيانات</button>
-    </div>
-
     <script>
-        const scriptURL = "https://script.google.com/macros/s/AKfycbz33uo9f-5eVXAFaI6qfk5ce-mgSX-tQ0q7HjDlYFa4akBvn3NuaUh5fuqYYMc1FEA/exec";
-
-        function login() {
-            const p = document.getElementById('adminPass').value;
-            if (p === "0598787757") { // كلمة سر الأدمن تبعتك
-                document.getElementById('admin-lock').style.display = 'none';
-                document.getElementById('admin-main').style.display = 'block';
-                loadData();
-            } else {
-                alert("الباسوورد غلط يا مدير!");
-            }
+        const url = "https://script.google.com/macros/s/AKfycbz33uo9f-5eVXAFaI6qfk5ce-mgSX-tQ0q7HjDlYFa4akBvn3NuaUh5fuqYYMc1FEA/exec";
+        function login() { if(document.getElementById('p').value === "0598787757") { document.getElementById('lock').style.display='none'; document.getElementById('main').style.display='block'; load(); } }
+        async function load() {
+            const [bRes, oRes] = await Promise.all([ fetch(url+"?action=getBalances").then(r=>r.json()), fetch(url+"?action=getOrders").then(r=>r.json()) ]);
+            let h = "";
+            Object.keys(bRes).forEach(u => {
+                if(u!=="المستخدم") h += `<div class="row"><b>${u}</b> <span>$${bRes[u]}</span> <div><input id="i_${u}"> <button onclick="up('${u}','add')" style="background:green;color:white">+</button> <button onclick="up('${u}','sub')" style="background:red;color:white">-</button></div></div>`;
+            });
+            document.getElementById('list').innerHTML = h;
+            document.getElementById('orders').innerHTML = oRes.reverse().map(o => `<div>${o.user}: ${o.service} (${o.qty})</div>`).join('');
         }
-
-        async function loadData() {
-            const listDiv = document.getElementById('users-list');
-            const ordersDiv = document.getElementById('orders-list');
-            
-            try {
-                const [balRes, ordRes] = await Promise.all([
-                    fetch(scriptURL + "?action=getBalances").then(r => r.json()),
-                    fetch(scriptURL + "?action=getOrders").then(r => r.json())
-                ]);
-
-                // عرض الأرصدة لكل الأسماء في الشيت
-                listDiv.innerHTML = "";
-                Object.keys(balRes).forEach(u => {
-                    if (u === "" || u === "المستخدم") return; // تجاهل العناوين والسطور الفاضية
-                    
-                    let b = balRes[u] || 0;
-                    listDiv.innerHTML += `
-                        <div class="user-row">
-                            <div style="text-align:right">
-                                <b style="display:block">👑 ${u}</b>
-                            </div>
-                            <div class="bal-val" id="v_${u}">$${b}</div>
-                            <div class="controls">
-                                <input type="number" id="i_${u}" class="amt-input" placeholder="0">
-                                <button class="btn-add" onclick="update('${u}','add')">+</button>
-                                <button class="btn-sub" onclick="update('${u}','sub')">-</button>
-                            </div>
-                        </div>`;
-                });
-
-                // عرض الطلبات
-                ordersDiv.innerHTML = ordRes.reverse().slice(0, 8).map(o => 
-                    `<div style="border-bottom: 1px solid #f1f2f6; padding: 10px 0;">
-                        <b>${o.user}</b> طلب ${o.service} <br>
-                        <small style="color:#b2bec3">${o.date}</small>
-                    </div>`
-                ).join('') || "لا يوجد طلبات حالياً";
-
-                document.getElementById('last-sync').innerText = "آخر تحديث: " + new Date().toLocaleTimeString('ar-EG');
-
-            } catch (e) {
-                listDiv.innerHTML = "<p style='color:orange'>فشل الاتصال بالشيت. تأكد من الإنترنت.</p>";
-            }
+        async function up(u, t) {
+            const a = document.getElementById('i_'+u).value;
+            await fetch(url, { method:"POST", body:JSON.stringify({action:"updateBalance", user:u, amount:a, type:t}) });
+            load();
         }
-
-        async function update(u, t) {
-            const val = document.getElementById('i_'+u).value;
-            if (!val || val <= 0) return alert("أدخل مبلغاً صحيحاً");
-            
-            const badge = document.getElementById('v_'+u);
-            badge.innerText = "⏳";
-            
-            try {
-                await fetch(scriptURL, {
-                    method: "POST",
-                    mode: "no-cors",
-                    body: JSON.stringify({ action: "updateBalance", user: u, amount: val, type: t })
-                });
-                
-                // انتظار بسيط للتأكد من تحديث جوجل شيت
-                setTimeout(loadData, 2500);
-            } catch (e) {
-                alert("حدث خطأ في التحديث");
-                loadData();
-            }
+        async function clearAll() {
+            if(confirm("مسح السجل؟")) { await fetch(url, { method:"POST", body:JSON.stringify({action:"clearOrders"}) }); load(); }
         }
     </script>
 </body>
