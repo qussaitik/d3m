@@ -3,155 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>خدمات المصيبة | تميز معنا</title>
+    <title>خدماتنا المميزة</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;800;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #6c5ce7;
-            --secondary: #00cec9;
-            --bg: #f8f9fd;
-            --card-bg: #ffffff;
-            --text: #2d3436;
-        }
-
-        body { 
-            font-family: 'Tajawal', sans-serif; 
-            background: var(--bg); 
-            color: var(--text); 
-            margin: 0; 
-            overflow-x: hidden; 
-        }
-
-        /* هيدر عصري ولبق */
-        .user-header { 
-            background: white; 
-            padding: 15px 25px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-            position: sticky; 
-            top: 0; 
-            z-index: 100; 
-        }
-
-        .welcome-text { text-align: right; }
-        .welcome-text span { font-size: 14px; color: #636e72; }
+        :root { --primary: #6c5ce7; --secondary: #00cec9; --bg: #f8f9fd; --card-bg: #ffffff; --text: #2d3436; }
+        body { font-family: 'Tajawal', sans-serif; background: var(--bg); color: var(--text); margin: 0; }
+        .user-header { background: white; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
         .welcome-text b { color: var(--primary); font-size: 18px; display: block; }
-
-        .balance-card { 
-            background: linear-gradient(135deg, var(--primary), var(--secondary)); 
-            padding: 10px 20px; 
-            border-radius: 12px; 
-            color: white; 
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
-        }
-
-        h1 { 
-            font-size: 28px; 
-            color: var(--primary); 
-            margin-top: 40px; 
-            text-align: center; 
-            font-weight: 900;
-        }
-
-        .subtitle {
-            text-align: center;
-            color: #636e72;
-            margin-bottom: 30px;
-        }
-
-        /* كروت الخدمات الجديدة */
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-            gap: 20px; 
-            padding: 0 20px 40px; 
-            max-width: 1000px;
-            margin: auto;
-        }
-
-        .service-card { 
-            background: var(--card-bg); 
-            padding: 25px; 
-            border-radius: 20px; 
-            border: 1px solid #edf2f7;
-            cursor: pointer; 
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.02);
-        }
-
-        .service-card:hover { 
-            transform: translateY(-10px); 
-            box-shadow: 0 15px 35px rgba(108, 92, 231, 0.15);
-            border-color: var(--primary);
-        }
-
-        .icon-circle {
-            width: 60px;
-            height: 60px;
-            background: #f0eeff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 15px;
-            font-size: 24px;
-        }
-
-        h3 { margin: 0; color: var(--text); font-size: 18px; }
+        .balance-card { background: linear-gradient(135deg, var(--primary), var(--secondary)); padding: 8px 15px; border-radius: 12px; color: white; text-align: center; }
+        h1 { font-size: 28px; color: var(--primary); margin-top: 40px; text-align: center; font-weight: 900; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding: 20px; max-width: 1000px; margin: auto; }
+        .service-card { background: var(--card-bg); padding: 25px; border-radius: 20px; border: 1px solid #edf2f7; cursor: pointer; transition: 0.4s; text-align: center; }
+        .service-card:hover { transform: translateY(-10px); box-shadow: 0 15px 35px rgba(108,92,231,0.15); }
+        .icon-circle { width: 50px; height: 50px; background: #f0eeff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 20px; }
     </style>
 </head>
 <body>
-
+    <script>if(!sessionStorage.getItem('currentUser')) window.location.href="index.html";</script>
     <div class="user-header">
-        <div class="welcome-text">
-            <span>أهلاً بك في عالم التميز،</span>
-            <b id="u-name">...</b>
-        </div>
-        <div class="balance-card">
-            <small style="font-weight: 500;">رصيدك الحالي</small>
-            <div id="u-balance" style="font-size: 20px; font-weight: 800;">$0.00</div>
-        </div>
+        <div class="welcome-text"><span>أهلاً بك،</span><b id="u-name">...</b></div>
+        <div class="balance-card"><small>رصيدك</small><div id="u-balance">$0.00</div></div>
     </div>
-    
     <h1>خدماتنا المميزة ✨</h1>
-    <p class="subtitle">اختر الخدمة المناسبة لتعزيز حضورك الرقمي</p>
-
     <div class="grid">
-        <div class="service-card" onclick="sel('متابعين تيك توك')">
-            <div class="icon-circle">👤</div>
-            <h3>متابعين تيك توك</h3>
-        </div>
-        <div class="service-card" onclick="sel('مشاهدات تيك توك')">
-            <div class="icon-circle">👁️</div>
-            <h3>مشاهدات تيك توك</h3>
-        </div>
-        <div class="service-card" onclick="sel('إعجابات تيك توك')">
-            <div class="icon-circle">❤️</div>
-            <h3>تفاعل وإعجابات</h3>
-        </div>
+        <div class="service-card" onclick="sel('متابعين تيك توك')"><div class="icon-circle">👤</div><h3>متابعين تيك توك</h3></div>
+        <div class="service-card" onclick="sel('مشاهدات تيك توك')"><div class="icon-circle">👁️</div><h3>مشاهدات تيك توك</h3></div>
+        <div class="service-card" onclick="sel('إعجابات تيك توك')"><div class="icon-circle">❤️</div><h3>تفاعل وإعجابات</h3></div>
     </div>
-
     <script>
-        const user = sessionStorage.getItem('currentUser') || "ضيفنا العزيز";
         const scriptURL = "https://script.google.com/macros/s/AKfycbz33uo9f-5eVXAFaI6qfk5ce-mgSX-tQ0q7HjDlYFa4akBvn3NuaUh5fuqYYMc1FEA/exec";
-        
+        document.getElementById('u-name').innerText = sessionStorage.getItem('currentUser');
         async function init() {
-            document.getElementById('u-name').innerText = user;
             try {
                 const res = await fetch(scriptURL + "?action=getBalances");
-                const balances = await res.json();
-                document.getElementById('u-balance').innerText = "$" + (balances[user] || "0.00");
-            } catch (e) { console.log("Error loading balance"); }
+                const b = await res.json();
+                document.getElementById('u-balance').innerText = "$" + (b[sessionStorage.getItem('currentUser')] || "0.00");
+            } catch(e) {}
         }
-        
-        function sel(n) { 
-            localStorage.setItem('chosenService', n); 
-            window.location.href = "order.html"; 
-        }
+        function sel(n) { localStorage.setItem('chosenService', n); window.location.href = "order.html"; }
         init();
     </script>
 </body>
