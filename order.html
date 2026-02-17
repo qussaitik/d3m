@@ -1,47 +1,46 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تأكيد الطلب</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #6c5ce7; --secondary: #00cec9; --bg: #f8f9fd; --text: #2d3436; }
-        body { font-family: 'Tajawal', sans-serif; background: var(--bg); margin: 0; padding: 20px; }
-        .order-card { background: white; padding: 30px; border-radius: 25px; max-width: 400px; margin: 50px auto; box-shadow: 0 15px 35px rgba(0,0,0,0.05); text-align: center; }
-        input { width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: 2px solid #f1f2f6; box-sizing: border-box; }
-        .btn-send { width: 100%; padding: 15px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; border-radius: 12px; font-weight: 900; cursor: pointer; }
-        .service-badge { background: #f0eeff; color: var(--primary); padding: 5px 15px; border-radius: 20px; font-size: 14px; margin-bottom: 20px; display: inline-block; }
+        body { font-family: 'Tajawal', sans-serif; background: #f8f9fd; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 30px; border-radius: 25px; width: 320px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #eee; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: #6c5ce7; color: white; border: none; border-radius: 12px; font-weight: 900; cursor: pointer; }
     </style>
 </head>
 <body>
     <script>if(!sessionStorage.getItem('currentUser')) window.location.href="index.html";</script>
-    <div class="order-card">
-        <div id="service-name" class="service-badge">...</div>
-        <h2>أكمل بياناتك ✨</h2>
-        <input type="text" id="link" placeholder="رابط الحساب/الفيديو">
-        <input type="number" id="qty" placeholder="الكمية">
-        <button id="submitBtn" class="btn-send" onclick="sendOrder()">تأكيد وإرسال الطلب</button>
+    <div class="card">
+        <div id="s" style="color:#6c5ce7; font-weight:900; margin-bottom:15px;"></div>
+        <input type="text" id="l" placeholder="رابط الحساب/الفيديو">
+        <input type="number" id="q" placeholder="الكمية">
+        <button id="btn" onclick="send()">إرسال الطلب</button>
     </div>
     <script>
-        const scriptURL = "https://script.google.com/macros/s/AKfycbz33uo9f-5eVXAFaI6qfk5ce-mgSX-tQ0q7HjDlYFa4akBvn3NuaUh5fuqYYMc1FEA/exec";
+        const url = "https://script.google.com/macros/s/AKfycbz33uo9f-5eVXAFaI6qfk5ce-mgSX-tQ0q7HjDlYFa4akBvn3NuaUh5fuqYYMc1FEA/exec";
         const service = localStorage.getItem('chosenService');
-        const user = sessionStorage.getItem('currentUser');
-        document.getElementById('service-name').innerText = "الخدمة: " + service;
+        document.getElementById('s').innerText = service;
 
-        async function sendOrder() {
-            const link = document.getElementById('link').value;
-            const qty = document.getElementById('qty').value;
-            if(!link || !qty) return alert("أكمل البيانات");
-            const btn = document.getElementById('submitBtn');
-            btn.disabled = true; btn.innerText = "جاري الحفظ...";
-
-            try {
-                await fetch(scriptURL, { method: "POST", mode: "no-cors", body: JSON.stringify({ action: "addOrder", user: user, service: service, link: link, qty: qty, date: new Date().toLocaleString('ar-EG') }) });
-                const msg = `مرحباً قصي، طلب جديد:%0A👤 المستخدم: ${user}%0A✨ الخدمة: ${service}%0A🔢 الكمية: ${qty}%0A🔗 الرابط: ${link}`;
-                alert("تم! سيتم تحويلك للواتساب");
-                window.location.href = `https://wa.me/972555630038?text=${msg}`;
-            } catch(e) { alert("خطأ!"); btn.disabled = false; }
+        async function send() {
+            const l = document.getElementById('l').value;
+            const q = document.getElementById('q').value;
+            if(!l || !q) return alert("أكمل البيانات");
+            const b = document.getElementById('btn');
+            b.disabled = true; b.innerText = "جاري المعالجة...";
+            
+            const res = await fetch(url, { method: "POST", body: JSON.stringify({ action:"addOrder", user:sessionStorage.getItem('currentUser'), service:service, link:l, qty:q, date:new Date().toLocaleString('ar-EG') }) });
+            const txt = await res.text();
+            
+            if(txt === "LowBalance") {
+                alert("رصيدك ما بكفي!");
+                b.disabled = false; b.innerText = "إرسال الطلب";
+            } else {
+                alert("تم الخصم والطلب بنجاح!");
+                window.location.href = `https://wa.me/972555630038?text=طلب جديد من ${sessionStorage.getItem('currentUser')}: ${service} عدد ${q}`;
+            }
         }
     </script>
 </body>
