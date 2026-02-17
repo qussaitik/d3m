@@ -3,209 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تأكيد الطلب | المصيبة</title>
+    <title>تأكيد الطلب</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;800;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #6c5ce7;
-            --secondary: #00cec9;
-            --bg: #f8f9fd;
-            --card-bg: #ffffff;
-            --text: #2d3436;
-        }
-
-        body { 
-            font-family: 'Tajawal', sans-serif; 
-            background: var(--bg); 
-            color: var(--text); 
-            margin: 0; 
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        /* الهيدر المتناسق */
-        .header { 
-            background: white; 
-            padding: 15px 25px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-        }
-
-        .back-btn {
-            text-decoration: none;
-            color: var(--primary);
-            font-weight: 800;
-            font-size: 14px;
-        }
-
-        /* كرت الطلب */
-        .order-container {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .order-card {
-            background: var(--card-bg);
-            padding: 35px;
-            border-radius: 30px;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
-            border: 1px solid #edf2f7;
-            text-align: center;
-        }
-
-        .order-card h2 {
-            color: var(--primary);
-            margin-bottom: 10px;
-            font-weight: 900;
-        }
-
-        .service-badge {
-            display: inline-block;
-            background: #f0eeff;
-            color: var(--primary);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 800;
-            margin-bottom: 25px;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-            text-align: right;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 800;
-            font-size: 14px;
-            color: #636e72;
-            padding-right: 5px;
-        }
-
-        input {
-            width: 100%;
-            padding: 15px;
-            border-radius: 12px;
-            border: 2px solid #f1f2f6;
-            font-family: 'Tajawal', sans-serif;
-            font-size: 16px;
-            transition: 0.3s;
-            box-sizing: border-box;
-            background: #fdfdfd;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: white;
-        }
-
-        .btn-send {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: 900;
-            cursor: pointer;
-            transition: 0.3s;
-            box-shadow: 0 8px 20px rgba(108, 92, 231, 0.2);
-            margin-top: 10px;
-        }
-
-        .btn-send:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 25px rgba(108, 92, 231, 0.3);
-        }
-
-        .btn-send:disabled {
-            background: #ccc;
-            transform: none;
-            cursor: not-allowed;
-        }
+        :root { --primary: #6c5ce7; --secondary: #00cec9; --bg: #f8f9fd; --text: #2d3436; }
+        body { font-family: 'Tajawal', sans-serif; background: var(--bg); margin: 0; padding: 20px; }
+        .order-card { background: white; padding: 30px; border-radius: 25px; max-width: 400px; margin: 50px auto; box-shadow: 0 15px 35px rgba(0,0,0,0.05); text-align: center; }
+        input { width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: 2px solid #f1f2f6; box-sizing: border-box; }
+        .btn-send { width: 100%; padding: 15px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; border-radius: 12px; font-weight: 900; cursor: pointer; }
+        .service-badge { background: #f0eeff; color: var(--primary); padding: 5px 15px; border-radius: 20px; font-size: 14px; margin-bottom: 20px; display: inline-block; }
     </style>
 </head>
 <body>
-
-    <div class="header">
-        <a href="services.html" class="back-btn">⬅ العودة للخدمات</a>
-        <div style="font-weight: 900; color: var(--text);">تأكيد طلبك</div>
+    <script>if(!sessionStorage.getItem('currentUser')) window.location.href="index.html";</script>
+    <div class="order-card">
+        <div id="service-name" class="service-badge">...</div>
+        <h2>أكمل بياناتك ✨</h2>
+        <input type="text" id="link" placeholder="رابط الحساب/الفيديو">
+        <input type="number" id="qty" placeholder="الكمية">
+        <button id="submitBtn" class="btn-send" onclick="sendOrder()">تأكيد وإرسال الطلب</button>
     </div>
-
-    <div class="order-container">
-        <div class="order-card">
-            <div id="service-name" class="service-badge">جاري التحميل...</div>
-            <h2>أكمل بياناتك ✨</h2>
-            <p style="color: #636e72; font-size: 14px; margin-bottom: 30px;">تأكد من صحة الرابط والكمية لضمان سرعة التنفيذ</p>
-
-            <div class="input-group">
-                <label>رابط الحساب أو الفيديو</label>
-                <input type="text" id="link" placeholder="https://www.tiktok.com/...">
-            </div>
-
-            <div class="input-group">
-                <label>الكمية المطلوبة</label>
-                <input type="number" id="qty" placeholder="مثلاً: 1000">
-            </div>
-
-            <button id="submitBtn" class="btn-send" onclick="sendOrder()">تأكيد وإرسال الطلب</button>
-        </div>
-    </div>
-
     <script>
         const scriptURL = "https://script.google.com/macros/s/AKfycbz33uo9f-5eVXAFaI6qfk5ce-mgSX-tQ0q7HjDlYFa4akBvn3NuaUh5fuqYYMc1FEA/exec";
-        const service = localStorage.getItem('chosenService') || "خدمة مميزة";
+        const service = localStorage.getItem('chosenService');
         const user = sessionStorage.getItem('currentUser');
-
-        // عرض اسم الخدمة
         document.getElementById('service-name').innerText = "الخدمة: " + service;
 
         async function sendOrder() {
             const link = document.getElementById('link').value;
             const qty = document.getElementById('qty').value;
+            if(!link || !qty) return alert("أكمل البيانات");
             const btn = document.getElementById('submitBtn');
-
-            if (!link || !qty) return alert("فضلاً، أكمل البيانات أولاً");
-            if (!user) return alert("حدث خطأ في الجلسة، سجل دخولك مرة أخرى");
-
-            btn.disabled = true;
-            btn.innerText = "جاري الإرسال... ⏳";
-
-            const orderData = {
-                action: "addOrder",
-                user: user,
-                service: service,
-                link: link,
-                qty: qty,
-                date: new Date().toLocaleString('ar-EG')
-            };
+            btn.disabled = true; btn.innerText = "جاري الحفظ...";
 
             try {
-                await fetch(scriptURL, {
-                    method: "POST",
-                    mode: "no-cors",
-                    body: JSON.stringify(orderData)
-                });
-                
-                alert("تم استلام طلبك بنجاح! سيتم التنفيذ فوراً.");
-                window.location.href = "services.html";
-            } catch (e) {
-                alert("عذراً، حدثت مشكلة. حاول مرة أخرى.");
-                btn.disabled = false;
-                btn.innerText = "تأكيد وإرسال الطلب";
-            }
+                await fetch(scriptURL, { method: "POST", mode: "no-cors", body: JSON.stringify({ action: "addOrder", user: user, service: service, link: link, qty: qty, date: new Date().toLocaleString('ar-EG') }) });
+                const msg = `مرحباً قصي، طلب جديد:%0A👤 المستخدم: ${user}%0A✨ الخدمة: ${service}%0A🔢 الكمية: ${qty}%0A🔗 الرابط: ${link}`;
+                alert("تم! سيتم تحويلك للواتساب");
+                window.location.href = `https://wa.me/972555630038?text=${msg}`;
+            } catch(e) { alert("خطأ!"); btn.disabled = false; }
         }
     </script>
 </body>
