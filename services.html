@@ -1,47 +1,42 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>خدماتنا المميزة</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;800;900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خدماتنا</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #6c5ce7; --secondary: #00cec9; --bg: #f8f9fd; --card-bg: #ffffff; --text: #2d3436; }
-        body { font-family: 'Tajawal', sans-serif; background: var(--bg); color: var(--text); margin: 0; }
-        .user-header { background: white; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
-        .welcome-text b { color: var(--primary); font-size: 18px; display: block; }
-        .balance-card { background: linear-gradient(135deg, var(--primary), var(--secondary)); padding: 8px 15px; border-radius: 12px; color: white; text-align: center; }
-        h1 { font-size: 28px; color: var(--primary); margin-top: 40px; text-align: center; font-weight: 900; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding: 20px; max-width: 1000px; margin: auto; }
-        .service-card { background: var(--card-bg); padding: 25px; border-radius: 20px; border: 1px solid #edf2f7; cursor: pointer; transition: 0.4s; text-align: center; }
-        .service-card:hover { transform: translateY(-10px); box-shadow: 0 15px 35px rgba(108,92,231,0.15); }
-        .icon-circle { width: 50px; height: 50px; background: #f0eeff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 20px; }
+        :root { --p: #6c5ce7; --s: #00cec9; }
+        body { font-family: 'Tajawal', sans-serif; background: #f8f9fd; margin: 0; }
+        .header { background: white; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .bal { background: linear-gradient(135deg, var(--p), var(--s)); color: white; padding: 5px 15px; border-radius: 10px; font-weight: 900; }
+        .grid { display: grid; grid-template-columns: 1fr; gap: 15px; padding: 20px; max-width: 500px; margin: auto; }
+        .item { background: white; padding: 20px; border-radius: 20px; text-align: center; cursor: pointer; border: 1px solid #eee; transition: 0.3s; }
+        .item:hover { transform: translateY(-5px); border-color: var(--p); }
     </style>
 </head>
 <body>
     <script>if(!sessionStorage.getItem('currentUser')) window.location.href="index.html";</script>
-    <div class="user-header">
-        <div class="welcome-text"><span>أهلاً بك،</span><b id="u-name">...</b></div>
-        <div class="balance-card"><small>رصيدك</small><div id="u-balance">$0.00</div></div>
+    <div class="header">
+        <div>أهلاً، <b id="u"></b></div>
+        <div class="bal" id="b">⏳</div>
     </div>
-    <h1>خدماتنا المميزة ✨</h1>
+    <h2 style="text-align:center; color:var(--p)">خدماتنا المميزة ✨</h2>
     <div class="grid">
-        <div class="service-card" onclick="sel('متابعين تيك توك')"><div class="icon-circle">👤</div><h3>متابعين تيك توك</h3></div>
-        <div class="service-card" onclick="sel('مشاهدات تيك توك')"><div class="icon-circle">👁️</div><h3>مشاهدات تيك توك</h3></div>
-        <div class="service-card" onclick="sel('إعجابات تيك توك')"><div class="icon-circle">❤️</div><h3>تفاعل وإعجابات</h3></div>
+        <div class="item" onclick="go('متابعين تيك توك')">👤 متابعين تيك توك</div>
+        <div class="item" onclick="go('مشاهدات تيك توك')">👁️ مشاهدات تيك توك</div>
+        <div class="item" onclick="go('إعجابات تيك توك')">❤️ إعجابات تيك توك</div>
     </div>
     <script>
-        const scriptURL = "https://script.google.com/macros/s/AKfycbz33uo9f-5eVXAFaI6qfk5ce-mgSX-tQ0q7HjDlYFa4akBvn3NuaUh5fuqYYMc1FEA/exec";
-        document.getElementById('u-name').innerText = sessionStorage.getItem('currentUser');
-        async function init() {
-            try {
-                const res = await fetch(scriptURL + "?action=getBalances");
-                const b = await res.json();
-                document.getElementById('u-balance').innerText = "$" + (b[sessionStorage.getItem('currentUser')] || "0.00");
-            } catch(e) {}
+        const url = "https://script.google.com/macros/s/AKfycbz33uo9f-5eVXAFaI6qfk5ce-mgSX-tQ0q7HjDlYFa4akBvn3NuaUh5fuqYYMc1FEA/exec";
+        const user = sessionStorage.getItem('currentUser');
+        document.getElementById('u').innerText = user;
+        async function load() {
+            const r = await fetch(url + "?action=getBalances");
+            const d = await r.json();
+            document.getElementById('b').innerText = "$" + (d[user] || "0.00");
         }
-        function sel(n) { localStorage.setItem('chosenService', n); window.location.href = "order.html"; }
-        init();
+        function go(s) { localStorage.setItem('chosenService', s); window.location.href="order.html"; }
+        load();
     </script>
 </body>
 </html>
