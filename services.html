@@ -3,51 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المصيبة | الخدمات الملكية</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700;900&display=swap" rel="stylesheet">
+    <title>خدمات المصيبة | تميز معنا</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;800;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Tajawal', sans-serif; background: #05011a; color: white; margin: 0; overflow-x: hidden; }
-        .user-header { background: rgba(255,255,255,0.05); backdrop-filter: blur(15px); padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #00f2ea; position: sticky; top: 0; z-index: 100; animation: fadeInDown 0.8s; }
-        .balance-box { background: linear-gradient(45deg, #00f2ea, #667eea); padding: 10px 20px; border-radius: 15px; box-shadow: 0 0 15px rgba(0,242,234,0.3); text-align: center; color: #000; }
-        .grid { display: flex; flex-direction: column; gap: 20px; align-items: center; padding: 30px 20px; }
-        .service-card { background: rgba(255,255,255,0.08); padding: 30px; border-radius: 20px; width: 85%; max-width: 380px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: 0.3s; animation: zoomIn 0.5s both; }
-        .service-card:hover { transform: scale(1.03); background: rgba(255,255,255,0.15); border-color: #ff00ff; box-shadow: 0 0 20px rgba(255,0,255,0.2); }
-        h1 { font-size: 32px; text-shadow: 0 0 10px #00f2ea; margin-top: 30px; text-align: center; animation: fadeIn 1.2s; }
-        @keyframes fadeInDown { from { opacity:0; transform: translateY(-20px); } to { opacity:1; transform: translateY(0); } }
-        @keyframes zoomIn { from { opacity:0; transform: scale(0.9); } to { opacity:1; transform: scale(1); } }
-        @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #00cec9;
+            --bg: #f8f9fd;
+            --card-bg: #ffffff;
+            --text: #2d3436;
+        }
+
+        body { 
+            font-family: 'Tajawal', sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            overflow-x: hidden; 
+        }
+
+        /* هيدر عصري ولبق */
+        .user-header { 
+            background: white; 
+            padding: 15px 25px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+        }
+
+        .welcome-text { text-align: right; }
+        .welcome-text span { font-size: 14px; color: #636e72; }
+        .welcome-text b { color: var(--primary); font-size: 18px; display: block; }
+
+        .balance-card { 
+            background: linear-gradient(135deg, var(--primary), var(--secondary)); 
+            padding: 10px 20px; 
+            border-radius: 12px; 
+            color: white; 
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
+        }
+
+        h1 { 
+            font-size: 28px; 
+            color: var(--primary); 
+            margin-top: 40px; 
+            text-align: center; 
+            font-weight: 900;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #636e72;
+            margin-bottom: 30px;
+        }
+
+        /* كروت الخدمات الجديدة */
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 20px; 
+            padding: 0 20px 40px; 
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .service-card { 
+            background: var(--card-bg); 
+            padding: 25px; 
+            border-radius: 20px; 
+            border: 1px solid #edf2f7;
+            cursor: pointer; 
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.02);
+        }
+
+        .service-card:hover { 
+            transform: translateY(-10px); 
+            box-shadow: 0 15px 35px rgba(108, 92, 231, 0.15);
+            border-color: var(--primary);
+        }
+
+        .icon-circle {
+            width: 60px;
+            height: 60px;
+            background: #f0eeff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 24px;
+        }
+
+        h3 { margin: 0; color: var(--text); font-size: 18px; }
     </style>
 </head>
 <body>
+
     <div class="user-header">
-        <div style="text-align: right;"><span>مرحباً بالأميرة،</span><br><b id="u-name" style="color: #00f2ea; font-size: 20px;">...</b></div>
-        <div class="balance-box"><small>رصيدك الملكي</small><br><b id="u-balance" style="font-size: 20px;">$---</b></div>
+        <div class="welcome-text">
+            <span>أهلاً بك في عالم التميز،</span>
+            <b id="u-name">...</b>
+        </div>
+        <div class="balance-card">
+            <small style="font-weight: 500;">رصيدك الحالي</small>
+            <div id="u-balance" style="font-size: 20px; font-weight: 800;">$0.00</div>
+        </div>
     </div>
     
-    <h1>اطلبي من عيوني ✨</h1>
+    <h1>خدماتنا المميزة ✨</h1>
+    <p class="subtitle">اختر الخدمة المناسبة لتعزيز حضورك الرقمي</p>
 
     <div class="grid">
-        <div class="service-card" style="animation-delay: 0.1s" onclick="sel('متابعين تيك توك')"><h3>👤 متابعين تيك توك</h3></div>
-        <div class="service-card" style="animation-delay: 0.2s" onclick="sel('مشاهدات تيك توك')"><h3>👁️ مشاهدات تيك توك</h3></div>
-        <div class="service-card" style="animation-delay: 0.3s" onclick="sel('إعجابات تيك توك')"><h3>❤️ إعجابات تيك توك</h3></div>
+        <div class="service-card" onclick="sel('متابعين تيك توك')">
+            <div class="icon-circle">👤</div>
+            <h3>متابعين تيك توك</h3>
+        </div>
+        <div class="service-card" onclick="sel('مشاهدات تيك توك')">
+            <div class="icon-circle">👁️</div>
+            <h3>مشاهدات تيك توك</h3>
+        </div>
+        <div class="service-card" onclick="sel('إعجابات تيك توك')">
+            <div class="icon-circle">❤️</div>
+            <h3>تفاعل وإعجابات</h3>
+        </div>
     </div>
 
     <script>
-        const scriptURL = "https://script.google.com/macros/s/AKfycbx-CzLtyGIJyoggh6GqSahiumRMrErOMAoXA1pjYdbECXp2PSEke1zXLyelzldXCxin/exec";
+        const user = sessionStorage.getItem('currentUser') || "ضيفنا العزيز";
+        const scriptURL = "https://script.google.com/macros/s/AKfycbz33uo9f-5eVXAFaI6qfk5ce-mgSX-tQ0q7HjDlYFa4akBvn3NuaUh5fuqYYMc1FEA/exec";
+        
         async function init() {
-            const user = sessionStorage.getItem('currentUser') || "زائرة";
             document.getElementById('u-name').innerText = user;
-            const cached = localStorage.getItem('bal_' + user);
-            if (cached) document.getElementById('u-balance').innerText = "$" + cached;
             try {
                 const res = await fetch(scriptURL + "?action=getBalances");
                 const balances = await res.json();
-                const newBal = balances[user] || "0.00";
-                document.getElementById('u-balance').innerText = "$" + newBal;
-                localStorage.setItem('bal_' + user, newBal);
-            } catch (e) {}
+                document.getElementById('u-balance').innerText = "$" + (balances[user] || "0.00");
+            } catch (e) { console.log("Error loading balance"); }
         }
-        function sel(n) { localStorage.setItem('chosenService', n); window.location.href = "order.html"; }
+        
+        function sel(n) { 
+            localStorage.setItem('chosenService', n); 
+            window.location.href = "order.html"; 
+        }
         init();
     </script>
 </body>
