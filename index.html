@@ -3,31 +3,54 @@
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>دخول | عالم المصيبة</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;800;900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #6c5ce7; --bg: #f8f9fd; }
-        body { font-family: 'Tajawal', sans-serif; background: var(--bg); display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: white; padding: 40px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; width: 320px; }
-        input { width: 100%; padding: 15px; margin-bottom: 10px; border-radius: 12px; border: 2px solid #eee; box-sizing: border-box; text-align: center; font-family: 'Tajawal'; }
-        button { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 900; cursor: pointer; }
+        :root { --p: #6c5ce7; --s: #00cec9; --bg: #f0f2f8; }
+        body { font-family: 'Tajawal', sans-serif; background: var(--bg); height: 100vh; margin: 0; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        .bg-shapes { position: absolute; width: 100%; height: 100%; z-index: -1; }
+        .circle { position: absolute; border-radius: 50%; background: linear-gradient(var(--p), var(--s)); filter: blur(80px); opacity: 0.2; }
+        
+        .login-card { 
+            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);
+            padding: 50px 40px; border-radius: 40px; width: 380px; text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.1); border: 1px solid white;
+        }
+        .logo { font-size: 60px; margin-bottom: 20px; display: inline-block; }
+        h2 { color: #2d3436; font-weight: 900; margin-bottom: 30px; font-size: 26px; }
+        input { 
+            width: 100%; padding: 16px; margin-bottom: 15px; border-radius: 18px; 
+            border: 2px solid #eee; box-sizing: border-box; font-family: 'Tajawal';
+            font-size: 16px; text-align: center; transition: 0.3s;
+        }
+        input:focus { outline: none; border-color: var(--p); box-shadow: 0 0 10px rgba(108,92,231,0.1); }
+        button { 
+            width: 100%; padding: 18px; background: linear-gradient(135deg, var(--p), var(--s));
+            color: white; border: none; border-radius: 18px; font-weight: 900;
+            cursor: pointer; font-size: 18px; transition: 0.4s; box-shadow: 0 10px 20px rgba(108,92,231,0.2);
+        }
+        button:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(108,92,231,0.3); }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h2>أهلاً بك ✨</h2>
+    <div class="bg-shapes">
+        <div class="circle" style="width:300px; height:300px; top:-50px; left:-50px;"></div>
+        <div class="circle" style="width:250px; height:250px; bottom:-50px; right:-50px;"></div>
+    </div>
+    <div class="login-card">
+        <div class="logo">✨</div>
+        <h2>مرحباً بك يا غالي</h2>
         <input type="text" id="user" placeholder="اسمك الكريم">
         <input type="password" id="pass" placeholder="كلمة المرور">
         <button onclick="login()">دخول للموقع</button>
     </div>
     <script>
-        sessionStorage.clear();
         function login() {
-            const u = document.getElementById('user').value;
+            const u = document.getElementById('user').value.trim();
             const p = document.getElementById('pass').value;
             if (p === "159159" && u) {
                 sessionStorage.setItem('currentUser', u);
                 window.location.href = "services.html";
-            } else { alert("البيانات غلط يا بطل!"); }
+            } else { alert("تأكد من البيانات يا بطل!"); }
         }
     </script>
 </body>
