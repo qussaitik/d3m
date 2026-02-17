@@ -23,6 +23,7 @@
             background: linear-gradient(135deg, var(--p), var(--s)); 
             color: white; padding: 8px 18px; border-radius: 12px; 
             text-align: center; box-shadow: 0 5px 15px rgba(108, 92, 231, 0.2);
+            min-width: 110px; /* ضمان مساحة كافية للأرقام */
         }
 
         .services-grid { 
@@ -53,7 +54,10 @@
     
     <div class="navbar">
         <div class="user-tag">مرحباً بك،<b id="u">...</b></div>
-        <div class="balance-box"><small style="font-size: 11px; opacity: 0.9;">الرصيد المتوفر</small><div id="b" style="font-size: 18px; font-weight: 900;">$0.00</div></div>
+        <div class="balance-box">
+            <small style="font-size: 11px; opacity: 0.9;">الرصيد المتوفر</small>
+            <div id="b" style="font-size: 17px; font-weight: 900;">$0.0000</div>
+        </div>
     </div>
 
     <div class="services-grid">
@@ -83,8 +87,13 @@
             try {
                 const response = await fetch(url + "?action=getBalances");
                 const data = await response.json();
-                document.getElementById('b').innerText = "$" + (parseFloat(data[user] || 0).toFixed(2));
-            } catch(e) { console.error("Error fetching balance"); }
+                // تم تعديل التنسيق هنا لعرض 4 خانات عشرية بدقة
+                const balanceValue = parseFloat(data[user] || 0);
+                document.getElementById('b').innerText = "$" + balanceValue.toFixed(4);
+            } catch(e) { 
+                console.error("Error fetching balance");
+                document.getElementById('b').innerText = "$0.0000";
+            }
         }
 
         function navigateTo(serviceName) {
