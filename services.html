@@ -3,36 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>قائمة الخدمات</title>
+    <title>الخدمات المتاحة</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --p: #6c5ce7; --s: #00cec9; --bg: #f4f7fe; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Tajawal', sans-serif; background: var(--bg); padding-bottom: 40px; }
+        body { font-family: 'Tajawal', sans-serif; background: var(--bg); padding-bottom: 30px; }
         
         .navbar { 
-            background: white; padding: 20px; display: flex; 
+            background: white; padding: 15px 20px; display: flex; 
             justify-content: space-between; align-items: center;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100;
+            border-bottom: 1px solid #eee;
         }
         .user-tag { font-size: 14px; color: #636e72; }
-        .user-tag b { color: var(--p); font-size: 18px; display: block; }
+        .user-tag b { color: var(--p); font-size: 18px; display: block; line-height: 1.2; }
         
         .balance-box { 
             background: linear-gradient(135deg, var(--p), var(--s)); 
-            color: white; padding: 10px 20px; border-radius: 15px; 
+            color: white; padding: 8px 18px; border-radius: 12px; 
             text-align: center; box-shadow: 0 5px 15px rgba(108, 92, 231, 0.2);
         }
 
-        .main-title { text-align: center; margin: 40px 0 20px; color: #2d3436; font-weight: 900; }
-
         .services-grid { 
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            gap: 20px; padding: 0 20px; max-width: 1000px; margin: auto; 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 20px; padding: 25px 20px; max-width: 1000px; margin: auto; 
         }
 
         .service-card { 
-            background: white; padding: 30px; border-radius: 25px; 
+            background: white; padding: 25px; border-radius: 25px; 
             text-align: center; cursor: pointer; border: 1px solid #edf2f7;
             transition: all 0.3s ease; box-shadow: 0 10px 20px rgba(0,0,0,0.02);
         }
@@ -41,11 +40,11 @@
             box-shadow: 0 15px 30px rgba(108, 92, 231, 0.1);
         }
         .icon-circle { 
-            width: 70px; height: 70px; background: #f0eeff; 
+            width: 60px; height: 60px; background: #f0eeff; 
             border-radius: 50%; display: flex; align-items: center; 
-            justify-content: center; margin: 0 auto 20px; font-size: 30px;
+            justify-content: center; margin: 0 auto 15px; font-size: 26px;
         }
-        .service-card h3 { color: #2d3436; margin-bottom: 10px; }
+        .service-card h3 { color: #2d3436; margin-bottom: 8px; font-size: 20px; }
         .service-card p { color: #b2bec3; font-size: 14px; font-weight: 700; }
     </style>
 </head>
@@ -53,11 +52,9 @@
     <script>if(!sessionStorage.getItem('currentUser')) window.location.href="index.html";</script>
     
     <div class="navbar">
-        <div class="user-tag">أهلاً بك،<b id="u">المستخدم</b></div>
-        <div class="balance-box"><small>الرصيد المتوفر</small><div id="b" style="font-size: 20px; font-weight: 900;">$0.00</div></div>
+        <div class="user-tag">مرحباً بك،<b id="u">...</b></div>
+        <div class="balance-box"><small style="font-size: 11px; opacity: 0.9;">الرصيد المتوفر</small><div id="b" style="font-size: 18px; font-weight: 900;">$0.00</div></div>
     </div>
-
-    <h1 class="main-title">اختر الخدمة المطلوبة ✨</h1>
 
     <div class="services-grid">
         <div class="service-card" onclick="navigateTo('متابعين تيك توك')">
