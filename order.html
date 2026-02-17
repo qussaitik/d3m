@@ -2,44 +2,64 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تأكيد الطلب</title>
+    <title>تأكيد الطلب | عالم المصيبة</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Tajawal', sans-serif; background: #f8f9fd; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: white; padding: 30px; border-radius: 25px; width: 320px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #eee; box-sizing: border-box; }
-        button { width: 100%; padding: 15px; background: #6c5ce7; color: white; border: none; border-radius: 12px; font-weight: 900; cursor: pointer; }
+        :root { --p: #6c5ce7; --s: #00cec9; --bg: #f4f7fe; }
+        body { font-family: 'Tajawal', sans-serif; background: var(--bg); display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .order-card { background: white; padding: 45px; border-radius: 35px; width: 90%; max-width: 420px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.1); border: 1px solid #edf2f7; }
+        .service-info { background: #f0eeff; color: var(--p); padding: 10px 20px; border-radius: 15px; font-weight: 800; margin-bottom: 25px; display: inline-block; }
+        input { width: 100%; padding: 16px; margin: 12px 0; border-radius: 15px; border: 2px solid #f1f2f6; box-sizing: border-box; font-family: 'Tajawal'; font-size: 16px; text-align: center; transition: 0.3s; }
+        input:focus { outline: none; border-color: var(--p); background: #fdfdfd; }
+        button { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--p), var(--s)); color: white; border: none; border-radius: 15px; font-weight: 900; cursor: pointer; font-size: 18px; margin-top: 20px; transition: 0.4s; }
+        button:hover { transform: scale(1.02); box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3); }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        .back-link { display: block; margin-top: 20px; color: #b2bec3; text-decoration: none; font-size: 14px; font-weight: 800; }
     </style>
 </head>
 <body>
-    <script>if(!sessionStorage.getItem('currentUser')) window.location.href="index.html";</script>
-    <div class="card">
-        <div id="s" style="color:#6c5ce7; font-weight:900; margin-bottom:15px;"></div>
-        <input type="text" id="l" placeholder="رابط الحساب/الفيديو">
-        <input type="number" id="q" placeholder="الكمية">
-        <button id="btn" onclick="send()">إرسال الطلب</button>
+    <div class="order-card">
+        <div id="s" class="service-info">...</div>
+        <h2 style="margin-bottom: 10px; color: #2d3436;">تأكيد طلبك 🚀</h2>
+        <p style="color: #636e72; font-size: 14px; margin-bottom: 20px;">سيتم خصم التكلفة من رصيدك تلقائياً</p>
+        <input type="text" id="l" placeholder="ضع رابط الحساب أو الفيديو هنا">
+        <input type="number" id="q" placeholder="أدخل الكمية المطلوبة">
+        <button id="btn" onclick="send()">تأكيد وإرسال الطلب</button>
+        <a href="services.html" class="back-link">⬅ إلغاء والعودة للخدمات</a>
     </div>
     <script>
-        const url = "https://script.google.com/macros/s/AKfycbz33uo9f-5eVXAFaI6qfk5ce-mgSX-tQ0q7HjDlYFa4akBvn3NuaUh5fuqYYMc1FEA/exec";
+        const url = "https://script.google.com/macros/s/AKfycbxCZH5YiykKS0_PS4rs2nsUbXDiXZfBelymkvieUeupMdJO4VxTsyTcn80sEdT6gO5o/exec";
         const service = localStorage.getItem('chosenService');
-        document.getElementById('s').innerText = service;
+        const user = sessionStorage.getItem('currentUser');
+        document.getElementById('s').innerText = "الخدمة المختارة: " + service;
 
         async function send() {
             const l = document.getElementById('l').value;
             const q = document.getElementById('q').value;
-            if(!l || !q) return alert("أكمل البيانات");
-            const b = document.getElementById('btn');
-            b.disabled = true; b.innerText = "جاري المعالجة...";
+            if(!l || !q || q <= 0) return alert("يا بطل، عبي البيانات صح!");
             
-            const res = await fetch(url, { method: "POST", body: JSON.stringify({ action:"addOrder", user:sessionStorage.getItem('currentUser'), service:service, link:l, qty:q, date:new Date().toLocaleString('ar-EG') }) });
-            const txt = await res.text();
+            const btn = document.getElementById('btn');
+            btn.disabled = true; btn.innerText = "جاري التأكد والخصم... ⏳";
             
-            if(txt === "LowBalance") {
-                alert("رصيدك ما بكفي!");
-                b.disabled = false; b.innerText = "إرسال الطلب";
-            } else {
-                alert("تم الخصم والطلب بنجاح!");
-                window.location.href = `https://wa.me/972555630038?text=طلب جديد من ${sessionStorage.getItem('currentUser')}: ${service} عدد ${q}`;
+            const finalURL = `${url}?action=addOrder&user=${encodeURIComponent(user)}&service=${encodeURIComponent(service)}&link=${encodeURIComponent(l)}&qty=${q}&date=${encodeURIComponent(new Date().toLocaleString('ar-EG'))}`;
+
+            try {
+                const res = await fetch(finalURL);
+                const txt = await res.text();
+                
+                if(txt === "LowBalance") {
+                    alert("رصيدك ما بكفي يا غالي! اشحن أو قلل الكمية.");
+                    btn.disabled = false; btn.innerText = "تأكيد وإرسال الطلب";
+                } else if(txt === "Success") {
+                    alert("تم الخصم بنجاح! مبروك عليك.");
+                    window.location.href = `https://wa.me/972555630038?text=طلب جديد من ${user}:%0A✨ ${service}%0A🔢 الكمية: ${q}%0A🔗 الرابط: ${l}`;
+                } else {
+                    alert("في شي غلط صار، تأكد من اسمك في الشيت.");
+                    btn.disabled = false; btn.innerText = "تأكيد وإرسال الطلب";
+                }
+            } catch(e) { 
+                alert("مشكلة في الاتصال بالسيرفر."); 
+                btn.disabled = false; btn.innerText = "تأكيد وإرسال الطلب";
             }
         }
     </script>
