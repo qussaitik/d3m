@@ -6,87 +6,79 @@
     <title>تسجيل الدخول | عالم المصيبة</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary-color: #6c5ce7; --secondary-color: #00cec9; --background-color: #f4f7fe; }
+        :root { --primary-color: #6c5ce7; --secondary-color: #00cec9; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body { 
             font-family: 'Tajawal', sans-serif; 
-            background-image: url('qussai.png'); /* خلفية صورتك */
+            background: url('qussai.png') no-repeat center center fixed; 
             background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            height: 100vh; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            overflow: hidden;
-            position: relative;
+            height: 100vh; display: flex; justify-content: center; align-items: center; 
+            overflow: hidden; position: relative;
         }
 
-        /* طبقة تعتيم خفيفة جداً عشان الخلفية تبان */
+        /* طبقة عزل خفيفة جداً لضمان رؤية صورتك */
         body::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.2); /* تعتيم بنسبة 20% فقط */
-            z-index: 1;
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.25); z-index: 1;
         }
 
-        .login-container { 
-            /* خلفية شفافة أكتر بكتير (Glassmorphism) */
-            background: rgba(255, 255, 255, 0.5); /* شفافية بنسبة 50% */
-            padding: 40px 30px; 
-            border-radius: 30px; 
-            width: 90%; 
-            max-width: 400px; 
-            text-align: center; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
-            border: 1px solid rgba(255, 255, 255, 0.3); 
-            backdrop-filter: blur(15px); /* تأثير تغبيش قوي للفورم نفسه */
-            position: relative;
-            z-index: 10;
-        }
-
-        /* رجعت دائرة العلم زي ما كانت */
-        .icon-header { margin-bottom: 20px; display: flex; justify-content: center; }
-        .pal-flag-3d {
-            width: 90px; height: 90px;
-            border-radius: 50%;
-            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Flag_of_Palestine_Round.svg/1024px-Flag_of_Palestine_Round.svg.png');
-            background-size: cover;
-            background-position: center;
-            box-shadow: 
-                0 10px 20px rgba(0,0,0,0.2), 
-                inset 0 -5px 10px rgba(0,0,0,0.3),
-                inset 0 5px 10px rgba(255,255,255,0.4);
-            border: 3px solid #fff;
-            transition: transform 0.4s ease;
-        }
-        .pal-flag-3d:hover { transform: scale(1.1) rotate(10deg); cursor: pointer; }
-
-        h2 { color: #2d3436; font-weight: 900; margin-bottom: 25px; font-size: 24px; }
-        input { 
-            width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 15px; 
-            border: 2px solid rgba(237, 242, 247, 0.5); text-align: center; font-family: 'Tajawal'; outline: none;
-            background: rgba(255, 255, 255, 0.7); /* حقول إدخال شفافة */
-        }
-        button { 
-            width: 100%; padding: 15px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white; border: none; border-radius: 15px; font-weight: 700; cursor: pointer; font-size: 18px; 
-            transition: all 0.3s ease;
-        }
-        button:hover { transform: translateY(-3px); box-shadow: 0 10px 15px rgba(108, 92, 231, 0.3); }
-
+        /* شاشة التحميل (الأنيميشن اللي رجعناه) */
         #loader {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(255, 255, 255, 0.9); z-index: 1000; flex-direction: column;
-            justify-content: center; align-items: center;
+            justify-content: center; align-items: center; backdrop-filter: blur(5px);
         }
+        .spinner {
+            width: 50px; height: 50px; border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color); border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 15px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loading-text { color: var(--primary-color); font-weight: 700; font-size: 18px; }
+
+        .login-container { 
+            /* جعل المستطيل شفاف جداً وبلمسة زجاجية */
+            background: rgba(255, 255, 255, 0.25); 
+            padding: 40px 30px; border-radius: 30px; 
+            width: 90%; max-width: 400px; text-align: center; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3); 
+            border: 1px solid rgba(255, 255, 255, 0.3); 
+            backdrop-filter: blur(12px); /* تأثير الشفافية الزجاجي */
+            position: relative; z-index: 10;
+        }
+
+        /* العلم الدائري الـ 3D (رجعناه) */
+        .icon-header { margin-bottom: 20px; display: flex; justify-content: center; }
+        .pal-flag-3d {
+            width: 100px; height: 100px; border-radius: 50%;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Flag_of_Palestine_Round.svg/1024px-Flag_of_Palestine_Round.svg.png');
+            background-size: cover; background-position: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4), inset 0 -5px 10px rgba(0,0,0,0.2);
+            border: 3px solid #fff; transition: transform 0.4s ease;
+        }
+        .pal-flag-3d:hover { transform: scale(1.1) rotate(5deg); }
+
+        h2 { color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.3); font-weight: 900; margin-bottom: 25px; font-size: 24px; }
+        
+        input { 
+            width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 15px; 
+            border: none; text-align: center; font-family: 'Tajawal'; outline: none;
+            background: rgba(255, 255, 255, 0.8); font-weight: bold;
+        }
+
+        button { 
+            width: 100%; padding: 15px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white; border: none; border-radius: 15px; font-weight: 700; cursor: pointer; font-size: 18px; 
+            transition: all 0.3s ease; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        button:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(108, 92, 231, 0.4); }
     </style>
 </head>
 <body>
     <div id="loader">
         <div class="spinner"></div>
+        <div class="loading-text">جاري تأمين حسابك... 🛡️</div>
     </div>
 
     <div class="login-container">
@@ -94,15 +86,48 @@
             <div class="pal-flag-3d"></div>
         </div>
         <h2>مرحباً بك</h2>
-        <input type="text" id="user" placeholder="اسم المستخدم">
+        <input type="text" id="user" placeholder="اسم المستخدم" autocomplete="off">
         <input type="password" id="pass" placeholder="كلمة المرور">
-        <button onclick="executeLogin()">دخول آمن</button>
+        <button id="loginBtn" onclick="executeLogin()">دخول آمن</button>
     </div>
 
     <script>
-        // نفس كود الـ Script تبعك هون
+        const url = "https://script.google.com/macros/s/AKfycbyqXOusm9NTC-P75CzHfQlmM4wfbMTP5VNiw0lXjRhhhxG6uTITStHqdm44bkfX4VXB/exec";
+
         async function executeLogin() {
-            // ... كود الـ Fetch تبعك ...
+            const userField = document.getElementById('user').value.trim();
+            const passField = document.getElementById('pass').value.trim();
+            const loader = document.getElementById('loader');
+
+            if (!userField || !passField) {
+                alert("عبّي بياناتك يا غالي!");
+                return;
+            }
+
+            loader.style.display = 'flex';
+
+            try {
+                const res = await fetch(url + "?action=getBalances");
+                const allData = await res.json();
+
+                if (allData[userField]) {
+                    const correctPass = String(allData[userField].password);
+                    if (passField === correctPass) {
+                        localStorage.setItem('user', userField);
+                        sessionStorage.setItem('currentUser', userField);
+                        window.location.href = "services.html";
+                    } else {
+                        alert("كلمة المرور غلط!");
+                        loader.style.display = 'none';
+                    }
+                } else {
+                    alert("المستخدم غير موجود!");
+                    loader.style.display = 'none';
+                }
+            } catch (e) {
+                alert("مشكلة في الشبكة، حاول مرة ثانية.");
+                loader.style.display = 'none';
+            }
         }
     </script>
 </body>
