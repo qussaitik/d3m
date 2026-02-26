@@ -89,7 +89,6 @@
             transform: scale(0.98); 
         }
 
-        /* دوائر جمالية في الخلفية */
         .decor-circle {
             position: absolute;
             border-radius: 50%;
@@ -118,7 +117,11 @@
             const password = document.getElementById('pass').value;
             
             if (password === "159159" && username !== "") {
-                sessionStorage.setItem('currentUser', username);
+                // التعديل الجوهري هون يا قصي:
+                // 1. استخدمنا localStorage عشان الحفظ يكون دائم
+                // 2. استخدمنا المفتاح 'user' عشان يطابق صفحة الطلبات
+                localStorage.setItem('user', username);
+                
                 window.location.href = "services.html";
             } else { 
                 alert("عذراً، يرجى التأكد من صحة البيانات المدخلة."); 
