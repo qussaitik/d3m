@@ -1,50 +1,164 @@
-<script>
-    // الرابط الجديد تبعك يا قصي
-    const url = "https://script.google.com/macros/s/AKfycbyqXOusm9NTC-P75CzHfQlmM4wfbMTP5VNiw0lXjRhhhxG6uTITStHqdm44bkfX4VXB/exec";
-
-    async function executeLogin() {
-        const userField = document.getElementById('user').value.trim();
-        const passField = document.getElementById('pass').value.trim();
-        const btn = document.querySelector('button');
-
-        if (!userField || !passField) {
-            alert("يا غالي، عبّي الاسم وكلمة المرور!");
-            return;
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول | عالم المصيبة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --primary-color: #6c5ce7; 
+            --secondary-color: #00cec9; 
+            --background-color: #f4f7fe; 
         }
 
-        btn.innerText = "جاري التحقق...";
-        btn.disabled = true;
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+        }
 
-        try {
-            // طلب البيانات من الشيت (الأرصدة والباسوردات)
-            const res = await fetch(url + "?action=getBalances");
-            const allData = await res.json();
+        body { 
+            font-family: 'Tajawal', sans-serif; 
+            background: var(--background-color); 
+            height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            overflow: hidden; 
+            padding: 20px;
+        }
 
-            // فحص هل الاسم موجود؟
-            if (allData[userField]) {
-                const correctPass = String(allData[userField].password);
-                
-                // مقارنة الباسورد المدخل مع اللي في العمود C
-                if (passField === correctPass) {
-                    localStorage.setItem('user', userField);
-                    sessionStorage.setItem('currentUser', userField);
-                    window.location.href = "services.html";
+        .login-container { 
+            background: rgba(255, 255, 255, 0.95); 
+            backdrop-filter: blur(10px);
+            padding: 40px 30px; 
+            border-radius: 30px; 
+            width: 100%;
+            max-width: 400px; 
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08); 
+            border: 1px solid #ffffff;
+            position: relative;
+        }
+
+        .icon-header { 
+            font-size: 50px; 
+            margin-bottom: 15px; 
+        }
+
+        h2 { 
+            color: #2d3436; 
+            font-weight: 900; 
+            margin-bottom: 25px; 
+            font-size: 24px; 
+        }
+
+        input { 
+            width: 100%; 
+            padding: 14px; 
+            margin-bottom: 15px; 
+            border-radius: 15px; 
+            border: 2px solid #edf2f7; 
+            font-family: 'Tajawal';
+            font-size: 16px; 
+            text-align: center; 
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        input:focus { 
+            border-color: var(--primary-color); 
+            background: #fff;
+        }
+
+        button { 
+            width: 100%; 
+            padding: 15px; 
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white; 
+            border: none; 
+            border-radius: 15px; 
+            font-weight: 700;
+            cursor: pointer; 
+            font-size: 18px; 
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:active { 
+            transform: scale(0.98); 
+        }
+
+        .decor-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(var(--primary-color), var(--secondary-color));
+            filter: blur(60px);
+            opacity: 0.1;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <div class="decor-circle" style="width: 200px; height: 200px; top: 10%; left: 10%;"></div>
+    <div class="decor-circle" style="width: 250px; height: 250px; bottom: 10%; right: 10%;"></div>
+
+    <div class="login-container">
+        <div class="icon-header">🛡️</div>
+        <h2>مرحباً بك</h2>
+        <input type="text" id="user" placeholder="اسم المستخدم" autocomplete="off">
+        <input type="password" id="pass" placeholder="كلمة المرور">
+        <button id="loginBtn" onclick="executeLogin()">تسجيل الدخول</button>
+    </div>
+
+    <script>
+        const url = "https://script.google.com/macros/s/AKfycbyqXOusm9NTC-P75CzHfQlmM4wfbMTP5VNiw0lXjRhhhxG6uTITStHqdm44bkfX4VXB/exec";
+
+        async function executeLogin() {
+            const userField = document.getElementById('user').value.trim();
+            const passField = document.getElementById('pass').value.trim();
+            const btn = document.getElementById('loginBtn');
+
+            if (!userField || !passField) {
+                alert("يا غالي، دخّل اسمك وباسوردك!");
+                return;
+            }
+
+            btn.innerText = "جاري التحقق...";
+            btn.disabled = true;
+
+            try {
+                const res = await fetch(url + "?action=getBalances");
+                const allData = await res.json();
+
+                if (allData[userField]) {
+                    // بجيب الباسورد من العمود C اللي في الشيت
+                    const correctPass = String(allData[userField].password);
+                    
+                    if (passField === correctPass) {
+                        // حفظ الاسم عشان السجل والخدمات
+                        localStorage.setItem('user', userField);
+                        sessionStorage.setItem('currentUser', userField);
+                        window.location.href = "services.html";
+                    } else {
+                        alert("كلمة المرور غلط!");
+                        resetBtn();
+                    }
                 } else {
-                    alert("كلمة المرور غلط يا بطل!");
+                    alert("الاسم هاد مش مسجل عندنا!");
                     resetBtn();
                 }
-            } else {
-                alert("هاد الاسم مش مسجل عندنا!");
+            } catch (e) {
+                alert("في مشكلة بالاتصال بالسيرفر، تأكد من الإنترنت.");
                 resetBtn();
             }
-        } catch (e) {
-            alert("مشكلة في الاتصال.. تأكد من نشر السكريبت كـ 'Anyone'");
-            resetBtn();
         }
-    }
 
-    function resetBtn() {
-        btn.innerText = "تسجيل الدخول";
-        btn.disabled = false;
-    }
-</script>
+        function resetBtn() {
+            const btn = document.getElementById('loginBtn');
+            btn.innerText = "تسجيل الدخول";
+            btn.disabled = false;
+        }
+    </script>
+</body>
+</html>
