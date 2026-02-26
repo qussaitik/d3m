@@ -6,7 +6,7 @@
     <title>عالم المصيبة | الخدمات</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --p: #6c5ce7; --s: #00cec9; --bg: #f4f7fe; --w: #25d366; }
+        :root { --p: #6c5ce7; --s: #00cec9; --bg: #f4f7fe; --w: #25d366; --danger: #ff4757; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Tajawal', sans-serif; background: var(--bg); padding-bottom: 30px; }
         
@@ -19,9 +19,11 @@
         .user-tag { font-size: 14px; color: #636e72; }
         .user-tag b { color: var(--p); font-size: 18px; display: block; font-weight: 900; }
 
+        /* حاوية أزرار التحديث والخروج */
+        .top-btns { display: flex; gap: 8px; }
+
         .nav-actions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; }
 
-        /* تنسيق موحد للأزرار لتبدو مثل خانة الرصيد */
         .box-btn {
             padding: 12px; border-radius: 12px; text-align: center; font-weight: 700;
             text-decoration: none; font-size: 14px; transition: 0.3s; display: flex;
@@ -33,6 +35,8 @@
         .support-btn { background: #0984e3; color: white; }
         .orders-btn { background: white; color: var(--p); border: 2px solid var(--p); }
         .refresh-btn { background: #dfe6e9; color: #2d3436; }
+        /* زر الخروج الأحمر */
+        .logout-btn { background: var(--danger); color: white; }
 
         .box-btn:hover { transform: translateY(-2px); opacity: 0.9; }
 
@@ -66,7 +70,10 @@
     <div class="navbar">
         <div class="nav-top">
             <div class="user-tag">أهلاً بك،<b id="u">...</b></div>
-            <button class="box-btn refresh-btn" onclick="location.reload()">🔄 تحديث</button>
+            <div class="top-btns">
+                <button class="box-btn refresh-btn" onclick="location.reload()">🔄 تحديث</button>
+                <button class="box-btn logout-btn" onclick="logout()">🚪 خروج</button>
+            </div>
         </div>
         
         <div class="nav-actions">
@@ -111,6 +118,14 @@
                 const data = await response.json();
                 document.getElementById('b').innerText = "$" + parseFloat(data[user] || 0).toFixed(4);
             } catch(e) { document.getElementById('b').innerText = "$0.0000"; }
+        }
+
+        function logout() {
+            // مسح بيانات الجلسة للأمان
+            sessionStorage.clear();
+            localStorage.removeItem('chosenService');
+            // التوجيه لصفحة الدخول
+            window.location.href = "index.html";
         }
 
         function navigateTo(serviceName) {
