@@ -1,130 +1,67 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الدخول | نظام الإدارة</title>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دخول | عالم المصيبة</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --primary-color: #6c5ce7; 
-            --secondary-color: #00cec9; 
-            --background-color: #f4f7fe; 
-        }
-
-        * { 
-            box-sizing: border-box; 
-            margin: 0; 
-            padding: 0; 
-        }
-
-        body { 
-            font-family: 'Tajawal', sans-serif; 
-            background: var(--background-color); 
-            height: 100vh; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            overflow: hidden; 
-            padding: 20px;
-        }
-
-        .login-container { 
-            background: rgba(255, 255, 255, 0.95); 
-            backdrop-filter: blur(10px);
-            padding: 40px 30px; 
-            border-radius: 30px; 
-            width: 100%;
-            max-width: 400px; 
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.08); 
-            border: 1px solid #ffffff;
-            position: relative;
-        }
-
-        .icon-header { 
-            font-size: 50px; 
-            margin-bottom: 15px; 
-        }
-
-        h2 { 
-            color: #2d3436; 
-            font-weight: 900; 
-            margin-bottom: 25px; 
-            font-size: 24px; 
-        }
-
-        input { 
-            width: 100%; 
-            padding: 14px; 
-            margin-bottom: 15px; 
-            border-radius: 15px; 
-            border: 2px solid #edf2f7; 
-            font-family: 'Tajawal';
-            font-size: 16px; 
-            text-align: center; 
-            transition: all 0.3s ease;
-            outline: none;
-        }
-
-        input:focus { 
-            border-color: var(--primary-color); 
-            background: #fff;
-        }
-
-        button { 
-            width: 100%; 
-            padding: 15px; 
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white; 
-            border: none; 
-            border-radius: 15px; 
-            font-weight: 700;
-            cursor: pointer; 
-            font-size: 18px; 
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        button:active { 
-            transform: scale(0.98); 
-        }
-
-        .decor-circle {
-            position: absolute;
-            border-radius: 50%;
-            background: linear-gradient(var(--primary-color), var(--secondary-color));
-            filter: blur(60px);
-            opacity: 0.1;
-            z-index: -1;
-        }
+        :root { --p: #6c5ce7; --s: #00cec9; --bg: #f4f7fe; }
+        body { font-family: 'Tajawal', sans-serif; background: var(--bg); height: 100vh; display: flex; justify-content: center; align-items: center; margin: 0; }
+        .login-box { background: white; padding: 40px 30px; border-radius: 30px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        h2 { font-weight: 900; color: #2d3436; margin-bottom: 25px; }
+        input { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 15px; border: 2px solid #edf2f7; text-align: center; font-family: 'Tajawal'; outline: none; }
+        button { width: 100%; padding: 15px; background: linear-gradient(135deg, var(--p), var(--s)); color: white; border: none; border-radius: 15px; font-weight: 700; cursor: pointer; font-size: 18px; }
+        button:disabled { opacity: 0.6; cursor: not-allowed; }
     </style>
 </head>
 <body>
-    <div class="decor-circle" style="width: 200px; height: 200px; top: 10%; left: 10%;"></div>
-    <div class="decor-circle" style="width: 250px; height: 250px; bottom: 10%; right: 10%;"></div>
-
-    <div class="login-container">
-        <div class="icon-header">🛡️</div>
-        <h2>مرحباً بك</h2>
-        <input type="text" id="user" placeholder="اسم المستخدم" autocomplete="off">
+    <div class="login-box">
+        <div style="font-size: 50px; margin-bottom: 10px;">🛡️</div>
+        <h2>دخول المشتركين</h2>
+        <input type="text" id="user" placeholder="اسم المستخدم (كما هو في الشيت)" autocomplete="off">
         <input type="password" id="pass" placeholder="كلمة المرور">
-        <button onclick="executeLogin()">تسجيل الدخول</button>
+        <button id="loginBtn" onclick="executeLogin()">دخول</button>
     </div>
 
     <script>
-        function executeLogin() {
-            const username = document.getElementById('user').value.trim();
-            const password = document.getElementById('pass').value;
-            
-            if (password === "159159" && username !== "") {
-                // التعديل الجوهري هون يا قصي:
-                // 1. استخدمنا localStorage عشان الحفظ يكون دائم
-                // 2. استخدمنا المفتاح 'user' عشان يطابق صفحة الطلبات
-                localStorage.setItem('user', username);
+        // الرابط تبعك يا قصي
+        const url = "https://script.google.com/macros/s/AKfycbzYqF3GdbE4XnMpyd9UXmRal0Ycw2UufleDVOC5S16gE-CbYaIpwbE-gAJqNoBbxqMo/exec";
+
+        async function executeLogin() {
+            const user = document.getElementById('user').value.trim();
+            const pass = document.getElementById('pass').value;
+            const btn = document.getElementById('loginBtn');
+
+            if (!user || pass !== "159159") {
+                alert("تأكد من الاسم أو كلمة المرور (159159)");
+                return;
+            }
+
+            btn.innerText = "جاري التحقق...";
+            btn.disabled = true;
+
+            try {
+                // بنروح نسأل الشيت عن قائمة الأسماء في الأرصدة
+                const res = await fetch(url + "?action=getBalances");
+                const balances = await res.json();
                 
-                window.location.href = "services.html";
-            } else { 
-                alert("عذراً، يرجى التأكد من صحة البيانات المدخلة."); 
+                // بنشوف إذا الاسم موجود في الشيت
+                if (balances[user] !== undefined) {
+                    // إذا موجود، بنحفظه بكل الطرق عشان ما يضيع
+                    localStorage.setItem('user', user);
+                    localStorage.setItem('currentUser', user);
+                    sessionStorage.setItem('user', user);
+                    
+                    window.location.href = "services.html";
+                } else {
+                    alert("يا غالي، هاد الاسم مش مسجل عندنا بالشيت!");
+                    btn.innerText = "دخول";
+                    btn.disabled = false;
+                }
+            } catch (e) {
+                alert("خطأ في الاتصال بالسيرفر");
+                btn.innerText = "دخول";
+                btn.disabled = false;
             }
         }
     </script>
