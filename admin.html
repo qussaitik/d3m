@@ -5,22 +5,27 @@
     <title>لوحة الإدارة | عالم المصيبة</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;800;900&display=swap" rel="stylesheet">
     <style>
-        :root { --p: #6c5ce7; --s: #00cec9; --bg: #f4f7fe; --success: #55efc4; --danger: #ff7675; }
+        :root { --p: #6c5ce7; --s: #00cec9; --bg: #f4f7fe; --success: #55efc4; --danger: #ff7675; --warning: #f1c40f; }
         body { font-family: 'Tajawal', sans-serif; background: var(--bg); padding: 20px; }
         .card { background: white; padding: 25px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 25px; border: 1px solid #edf2f7; }
         h2 { color: var(--p); font-weight: 900; margin-bottom: 20px; border-right: 5px solid var(--p); padding-right: 15px; }
         .item-row { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #f1f2f6; flex-wrap: wrap; gap: 10px; }
+        .user-section { display: flex; flex-direction: column; gap: 5px; }
         .user-name { font-weight: 900; font-size: 16px; }
-        .amt-input { width: 90px; padding: 8px; border-radius: 12px; border: 2px solid #eee; text-align: center; font-weight: 900; outline: none; }
+        .controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .amt-input, .pass-input { padding: 8px; border-radius: 12px; border: 2px solid #eee; text-align: center; font-weight: 700; outline: none; }
+        .amt-input { width: 80px; }
+        .pass-input { width: 120px; font-size: 12px; background: #fafafa; }
         .btn-status { background: var(--p); color: white; border: none; padding: 10px 15px; border-radius: 12px; cursor: pointer; font-weight: 700; transition: 0.3s; }
-        .btn-status:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-action { font-size: 20px; cursor: pointer; font-weight: 900; border: none; background: none; transition: 0.2s; }
+        .btn-action:hover { transform: scale(1.2); }
         select { padding: 10px; border-radius: 12px; border: 1px solid #eee; font-family: 'Tajawal'; font-weight: 700; outline: none; background: #fff; }
     </style>
 </head>
 <body>
     <div class="container" id="main_ui">
         <div class="card">
-            <h2>💰 المشتركين والأرصدة</h2>
+            <h2>💰 المشتركين، الأرصدة والحماية</h2>
             <div id="users_list">جاري التحميل...</div>
         </div>
         <div class="card">
@@ -30,8 +35,8 @@
     </div>
 
     <script>
-        // الرابط الجديد اللي بعتته يا قصي
-        const url = "https://script.google.com/macros/s/AKfycbzYqF3GdbE4XnMpyd9UXmRal0Ycw2UufleDVOC5S16gE-CbYaIpwbE-gAJqNoBbxqMo/exec";
+        // الرابط الجديد تبعك يا قصي
+        const url = "https://script.google.com/macros/s/AKfycbyqXOusm9NTC-P75CzHfQlmM4wfbMTP5VNiw0lXjRhhhxG6uTITStHqdm44bkfX4VXB/exec";
 
         async function loadData() {
             try {
@@ -40,23 +45,36 @@
                     fetch(url + "?action=getOrders").then(r => r.json()) 
                 ]);
 
-                // عرض الأرصدة
-                document.getElementById('users_list').innerHTML = Object.keys(bRes).map(u => u !== "المستخدم" ? `
+                // عرض الأرصدة والباسوردات
+                document.getElementById('users_list').innerHTML = Object.keys(bRes).map(u => {
+                    const userData = bRes[u];
+                    const balance = (typeof userData === 'object') ? userData.balance : userData;
+                    const password = (typeof userData === 'object') ? userData.password : "159159";
+
+                    return `
                     <div class="item-row">
-                        <span class="user-name">👤 ${u} <small style="color:var(--p)">($${parseFloat(bRes[u]).toFixed(4)})</small></span>
-                        <div>
-                            <input type="number" id="i_${u}" class="amt-input" placeholder="0.00">
-                            <button onclick="updateBal('${u}','add')" style="color:var(--success); background:none; font-size:22px; cursor:pointer; font-weight:900; border:none; margin:0 5px;">+</button>
-                            <button onclick="updateBal('${u}','sub')" style="color:var(--danger); background:none; font-size:22px; cursor:pointer; font-weight:900; border:none; margin:0 5px;">-</button>
+                        <div class="user-section">
+                            <span class="user-name">👤 ${u}</span>
+                            <small style="color:var(--p); font-weight:800;">الرصيد: $${parseFloat(balance).toFixed(2)}</small>
                         </div>
-                    </div>` : '').join('');
+                        <div class="controls">
+                            <input type="number" id="i_${u}" class="amt-input" placeholder="0.00">
+                            <button class="btn-action" onclick="updateItem('${u}','add','amount')" style="color:var(--success)">+</button>
+                            <button class="btn-action" onclick="updateItem('${u}','sub','amount')" style="color:var(--danger)">-</button>
+                            
+                            <div style="border-right: 2px solid #eee; height: 30px; margin: 0 10px;"></div>
+                            <input type="text" id="p_${u}" class="pass-input" value="${password}" placeholder="كلمة المرور">
+                            <button class="btn-action" onclick="updateItem('${u}','password','password')" title="تحديث الباسورد">🔒</button>
+                        </div>
+                    </div>`;
+                }).join('');
 
                 // عرض الطلبات
                 document.getElementById('orders_list').innerHTML = oRes.reverse().map((o, i) => `
                     <div class="item-row">
                         <div style="font-size:14px; flex:1;">
                             <b>${o.user}</b>: ${o.service} <small>(${o.qty})</small><br>
-                            <small style="color:#7f8c8d">${o.date}</small>
+                            <small style="color:#7f8c8d">${o.date} | ${o.price}</small>
                         </div>
                         <div>
                             <select id="s_${i}">
@@ -70,10 +88,31 @@
             } catch(e) { console.error(e); }
         }
 
-        async function updateBal(u, t) {
-            const a = document.getElementById('i_' + u).value;
-            if(!a) return;
-            await fetch(url, { method: "POST", body: JSON.stringify({ action: "updateBalance", user: u, amount: a, type: t }) });
+        async function updateItem(u, t, mode) {
+            let val;
+            if(mode === 'amount') {
+                val = document.getElementById('i_' + u).value;
+            } else {
+                val = document.getElementById('p_' + u).value;
+            }
+
+            if(!val) return;
+
+            // إظهار تنبيه بسيط عشان تعرف إنه جاري الشغل
+            const confirmMsg = mode === 'password' ? `هل تريد تغيير باسوورد ${u} إلى ${val}؟` : `تأكيد العملية لـ ${u}`;
+            if(!confirm(confirmMsg)) return;
+
+            await fetch(url, { 
+                method: "POST", 
+                body: JSON.stringify({ 
+                    action: "updateBalance", 
+                    user: u, 
+                    amount: val, 
+                    type: t 
+                }) 
+            });
+            
+            alert("تم التحديث بنجاح ✅");
             loadData();
         }
 
@@ -87,7 +126,7 @@
                 body: JSON.stringify({ action: "updateOrderStatus", user: u, date: d, status: s }) 
             });
 
-            alert("تم تحديث حالة الطلب بنجاح ✅");
+            alert("تم تحديث حالة الطلب ✅");
             btn.disabled = false; btn.innerText = "حفظ";
             loadData(); 
         }
