@@ -31,7 +31,7 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* ستايل رسالة الدعم الفني (المنبثقة) */
+        /* ستايل الرسالة المنبثقة */
         #support-toast {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: white; padding: 30px; border-radius: 25px;
@@ -55,7 +55,6 @@
 
         @keyframes progressAnim { from { width: 100%; } to { width: 0%; } }
 
-        /* باقي الستايلات القديمة كما هي */
         .navbar { 
             background: rgba(255, 255, 255, 0.9); 
             padding: 15px; display: flex; flex-direction: column; gap: 15px;
@@ -121,7 +120,7 @@
     <script>if(!sessionStorage.getItem('currentUser')) window.location.href="index.html";</script>
     
     <div id="support-toast">
-        <div style="font-size: 40px; margin-bottom: 15px;">🛠️</div>
+        <div id="toast-icon" style="font-size: 40px; margin-bottom: 15px;">✅</div>
         <h2 style="font-size: 18px; color: #2d3436; margin-bottom: 10px;">تم تقديم طلبك بنجاح</h2>
         <p style="font-size: 14px; color: #636e72;">سيتم التواصل معك بأقرب فرصة ممكنة.</p>
         <div class="progress-bar">
@@ -142,9 +141,9 @@
             <div class="box-btn balance-box">
                 <div><small style="display:block; font-size:10px;">الرصيد</small><span id="b">$0.0000</span></div>
             </div>
-            <a href="https://wa.me/972555630038?text=أرغب في شحن رصيدي" class="box-btn" style="background:var(--w); color:white;">💰 شحن الرصيد</a>
+            <button onclick="handleAction('💰 طلب شحن رصيد', '💳')" class="box-btn" style="background:var(--w); color:white;">💰 شحن الرصيد</button>
             
-            <button onclick="showSupportMsg()" class="box-btn" style="background:#0984e3; color:white;">🛠️ الدعم الفني</button>
+            <button onclick="handleAction('⚠️ طلب دعم فني', '🛠️')" class="box-btn" style="background:#0984e3; color:white;">🛠️ الدعم الفني</button>
             
             <a href="my-orders.html" class="box-btn" style="background:white; color:var(--p); border:1px solid var(--p);">📦 سجل طلباتي</a>
         </div>
@@ -188,17 +187,22 @@
         const user = sessionStorage.getItem('currentUser');
         document.getElementById('u').innerText = user;
 
-        // وظيفة إظهار رسالة الدعم
-        function showSupportMsg() {
+        // وظيفة موحدة للشحن والدعم
+        function handleAction(actionType, icon) {
             const toast = document.getElementById('support-toast');
+            const toastIcon = document.getElementById('toast-icon');
+            
+            toastIcon.innerText = icon;
             toast.style.display = 'block';
             
-            // إرسال تنبيه للسيرفر (اختياري) بأن المستخدم يحتاج دعم
-            fetch(`${url}?action=logSupport&user=${encodeURIComponent(user)}`);
+            // إرسال الطلب للإكسل ليظهر في شيت الطلبات
+            const finalURL = `${url}?action=addOrder&user=${encodeURIComponent(user)}&service=${encodeURIComponent(actionType)}&link=${encodeURIComponent('طلب داخلي')}&qty=0`;
+            
+            fetch(finalURL).catch(e => console.log("Done"));
 
             setTimeout(() => {
                 toast.style.display = 'none';
-            }, 6000); // 6 ثواني بالضبط
+            }, 6000);
         }
 
         async function fetchBalance() {
