@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>عالم المصيبة | الخدمات</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --p: #6c5ce7; --s: #00cec9; --bg: #f4f7fe; --w: #25d366; --danger: #ff4757; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -19,7 +20,6 @@
         .user-tag { font-size: 14px; color: #636e72; }
         .user-tag b { color: var(--p); font-size: 18px; display: block; font-weight: 900; }
 
-        /* حاوية أزرار التحديث والخروج */
         .top-btns { display: flex; gap: 8px; }
 
         .nav-actions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; }
@@ -35,32 +35,42 @@
         .support-btn { background: #0984e3; color: white; }
         .orders-btn { background: white; color: var(--p); border: 2px solid var(--p); }
         .refresh-btn { background: #dfe6e9; color: #2d3436; }
-        /* زر الخروج الأحمر */
         .logout-btn { background: var(--danger); color: white; }
 
         .box-btn:hover { transform: translateY(-2px); opacity: 0.9; }
 
         .services-grid { 
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-            gap: 20px; padding: 25px 20px; max-width: 1000px; margin: auto; 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); 
+            gap: 15px; padding: 25px 20px; max-width: 1000px; margin: auto; 
         }
 
         .service-card { 
-            background: white; padding: 25px; border-radius: 25px; 
+            background: white; padding: 20px; border-radius: 25px; 
             text-align: center; cursor: pointer; border: 1px solid #edf2f7;
             transition: all 0.3s ease; box-shadow: 0 10px 20px rgba(0,0,0,0.02);
         }
-        .service-card:hover { transform: translateY(-5px); border-color: var(--p); }
+        .service-card:hover { transform: translateY(-5px); border-color: var(--p); box-shadow: 0 15px 30px rgba(108, 92, 231, 0.1); }
+        
         .icon-circle { 
-            width: 60px; height: 60px; background: #f0eeff; border-radius: 50%; 
+            width: 55px; height: 55px; border-radius: 50%; 
             display: flex; align-items: center; justify-content: center; 
-            margin: 0 auto 15px; font-size: 26px;
+            margin: 0 auto 12px; font-size: 24px;
         }
+
+        /* ألوان أيقونات الشركات */
+        .tiktok-bg { background: #000; color: #fff; }
+        .insta-bg { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: #fff; }
+        .fb-bg { background: #1877F2; color: #fff; }
+        .yt-bg { background: #FF0000; color: #fff; }
+
+        h3 { font-size: 16px; color: #2d3436; margin-bottom: 5px; }
+        p { font-size: 13px; color: #636e72; font-weight: 700; }
 
         @media (min-width: 600px) {
             .navbar { flex-direction: row; justify-content: space-between; }
             .nav-actions { grid-template-columns: repeat(4, auto); width: auto; }
             .box-btn { min-width: 130px; }
+            .services-grid { grid-template-columns: repeat(3, 1fr); }
         }
     </style>
 </head>
@@ -80,28 +90,44 @@
             <div class="box-btn balance-box">
                 <div><small style="display:block; font-size:10px;">الرصيد</small><span id="b">$0.0000</span></div>
             </div>
-
             <a href="https://wa.me/972555630038?text=أرغب في شحن رصيدي" class="box-btn recharge-btn">💰 شحن الرصيد</a>
-            
             <a href="https://wa.me/972555630038?text=أحتاج إلى دعم فني" class="box-btn support-btn">🛠️ الدعم الفني</a>
-            
             <a href="my-orders.html" class="box-btn orders-btn">📦 سجل طلباتي</a>
         </div>
     </div>
 
     <div class="services-grid">
         <div class="service-card" onclick="navigateTo('متابعين تيك توك')">
-            <div class="icon-circle">👤</div>
+            <div class="icon-circle tiktok-bg"><i class="fab fa-tiktok"></i></div>
             <h3>متابعين تيك توك</h3>
             <p>1000 متابع بـ 5$</p>
         </div>
         <div class="service-card" onclick="navigateTo('مشاهدات تيك توك')">
-            <div class="icon-circle">👁️</div>
+            <div class="icon-circle tiktok-bg"><i class="fas fa-eye"></i></div>
             <h3>مشاهدات تيك توك</h3>
             <p>10,000 مشاهدة بـ 1$</p>
         </div>
+
+        <div class="service-card" onclick="navigateTo('متابعين إنستغرام')">
+            <div class="icon-circle insta-bg"><i class="fab fa-instagram"></i></div>
+            <h3>متابعين إنستغرام</h3>
+            <p>1000 متابع بـ 3$</p>
+        </div>
+
+        <div class="service-card" onclick="navigateTo('متابعين فيسبوك')">
+            <div class="icon-circle fb-bg"><i class="fab fa-facebook-f"></i></div>
+            <h3>متابعين فيسبوك</h3>
+            <p>1000 متابع بـ 4$</p>
+        </div>
+
+        <div class="service-card" onclick="navigateTo('متابعين يوتيوب')">
+            <div class="icon-circle yt-bg"><i class="fab fa-youtube"></i></div>
+            <h3>متابعين يوتيوب</h3>
+            <p>1000 مشترك بـ 15$</p>
+        </div>
+
         <div class="service-card" onclick="navigateTo('إعجابات تيك توك')">
-            <div class="icon-circle">❤️</div>
+            <div class="icon-circle tiktok-bg"><i class="fas fa-heart"></i></div>
             <h3>إعجابات تيك توك</h3>
             <p>10,000 إعجاب بـ 1$</p>
         </div>
@@ -121,10 +147,8 @@
         }
 
         function logout() {
-            // مسح بيانات الجلسة للأمان
             sessionStorage.clear();
             localStorage.removeItem('chosenService');
-            // التوجيه لصفحة الدخول
             window.location.href = "index.html";
         }
 
