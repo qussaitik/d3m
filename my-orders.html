@@ -1,50 +1,100 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>طلباتي | عالم المصيبة</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;800;900&display=swap" rel="stylesheet">
     <style>
-        :root { --p: #6c5ce7; --bg: #f4f7fe; }
-        body { font-family: 'Tajawal', sans-serif; background: var(--bg); padding: 20px; }
+        :root { --p: #6c5ce7; --bg: #f4f7fe; --success: #00b894; --danger: #d63031; --warning: #fdcb6e; }
+        body { font-family: 'Tajawal', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #2d3436; }
         .container { max-width: 600px; margin: auto; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.03); margin-bottom: 15px; border-right: 5px solid var(--p); }
-        .card h4 { margin-bottom: 5px; color: #2d3436; }
-        .card p { font-size: 14px; color: #636e72; margin-bottom: 10px; }
-        .status { font-weight: 900; font-size: 12px; padding: 5px 10px; border-radius: 8px; background: #eee; }
-        .back-link { text-decoration: none; color: var(--p); font-weight: 700; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { font-weight: 900; color: var(--p); }
+        
+        .card { background: white; padding: 20px; border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 15px; border: 1px solid #edf2f7; position: relative; overflow: hidden; }
+        .card h4 { margin: 0 0 10px 0; font-weight: 800; font-size: 18px; color: #2d3436; }
+        .card p { margin: 5px 0; font-size: 14px; color: #636e72; }
+        .card .date { font-size: 12px; color: #b2bec3; }
+
+        /* تنسيق الألوان للحالات */
+        .status-badge { display: inline-block; padding: 6px 15px; border-radius: 12px; font-weight: 800; font-size: 12px; margin-top: 10px; }
+        .st-pending { background: #fff9e6; color: var(--warning); border: 1px solid var(--warning); }
+        .st-completed { background: #e6fffb; color: var(--success); border: 1px solid var(--success); }
+        .st-cancelled { background: #fff5f5; color: var(--danger); border: 1px solid var(--danger); }
+
+        .loading { text-align: center; padding: 50px; font-weight: 800; color: var(--p); }
+        .no-orders { text-align: center; padding: 40px; background: white; border-radius: 25px; color: #b2bec3; font-weight: 800; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h2>📦 سجل طلباتي</h2>
-            <a href="services.html" class="back-link">🔙 العودة</a>
-        </div>
-        <div id="list">جاري تحميل طلباتك...</div>
+
+<div class="container">
+    <div class="header">
+        <h1>📦 سجل طلباتي</h1>
+        <p>متابعة حالة طلباتك في عالم المصيبة</p>
     </div>
 
-    <script>
-        const url = "https://script.google.com/macros/s/AKfycbxCZH5YiykKS0_PS4rs2nsUbXDiXZfBelymkvieUeupMdJO4VxTsyTcn80sEdT6gO5o/exec";
-        const user = sessionStorage.getItem('currentUser');
+    <div id="orders-container">
+        <div class="loading">جاري جلب طلباتك...</div>
+    </div>
+</div>
 
-        async function load() {
-            const r = await fetch(url + "?action=getOrders");
-            const d = await r.json();
-            // تصفية الطلبات لتظهر الخاصة بالمستخدم الحالي فقط
-            const myOrders = d.filter(o => o.user === user).reverse();
-            
-            document.getElementById('list').innerHTML = myOrders.length ? myOrders.map(o => `
-                <div class="card">
-                    <h4>${o.service}</h4>
-                    <p>الكمية: ${o.qty} | الرابط: ${o.link}</p>
-                    <small>${o.date}</small>
-                    <div style="margin-top:10px"><span class="status">قيد المعالجة ⏳</span></div>
-                </div>
-            `).join('') : "لا يوجد لديك طلبات بعد.";
+<script>
+    // الرابط الجديد تبعك يا قصي
+    const url = "https://script.google.com/macros/s/AKfycbzYqF3GdbE4XnMpyd9UXmRal0Ycw2UufleDVOC5S16gE-CbYaIpwbE-gAJqNoBbxqMo/exec";
+    
+    // بنجيب اسم المستخدم اللي مسجل دخول (المخزن في المتصفح)
+    const currentUser = localStorage.getItem('user');
+
+    async function loadMyOrders() {
+        if (!currentUser) {
+            document.getElementById('orders-container').innerHTML = '<div class="no-orders">يرجى تسجيل الدخول أولاً</div>';
+            return;
         }
-        load();
-    </script>
+
+        try {
+            const response = await fetch(url + "?action=getOrders");
+            const allOrders = await response.json();
+            
+            // فلترة الطلبات عشان نعرض بس طلبات هاد المستخدم
+            const myOrders = allOrders.filter(o => o.user === currentUser).reverse();
+
+            if (myOrders.length === 0) {
+                document.getElementById('orders-container').innerHTML = '<div class="no-orders">لا يوجد لديك طلبات سابقة.</div>';
+                return;
+            }
+
+            let html = "";
+            myOrders.forEach(o => {
+                // تحديد شكل ولون الحالة
+                let statusClass = "st-pending";
+                let statusText = o.status || "قيد المعالجة";
+
+                if (statusText === "مكتمل") statusClass = "st-completed";
+                if (statusText === "ملغي") statusClass = "st-cancelled";
+
+                html += `
+                    <div class="card">
+                        <h4>${o.service}</h4>
+                        <p>الكمية: <b>${o.qty}</b></p>
+                        <p>الرابط: <a href="${o.link}" target="_blank" style="color:var(--p); text-decoration:none;">اضغط هنا</a></p>
+                        <div class="date">تاريخ الطلب: ${o.date}</div>
+                        <div class="status-badge ${statusClass}">${statusText}</div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('orders-container').innerHTML = html;
+
+        } catch (e) {
+            document.getElementById('orders-container').innerHTML = '<div class="no-orders">حدث خطأ في تحميل البيانات.</div>';
+        }
+    }
+
+    // تشغيل الدالة عند فتح الصفحة
+    loadMyOrders();
+</script>
+
 </body>
 </html>
