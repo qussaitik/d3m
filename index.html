@@ -29,7 +29,25 @@
             width: 100%; max-width: 400px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.08); 
             border: 1px solid #ffffff; position: relative; z-index: 10;
         }
-        .icon-header { font-size: 50px; margin-bottom: 15px; }
+
+        /* تعديل العلم ليكون 3D ودائري */
+        .icon-header { margin-bottom: 20px; display: flex; justify-content: center; }
+        .pal-flag-3d {
+            width: 90px; height: 90px;
+            border-radius: 50%;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Flag_of_Palestine_Round.svg/1024px-Flag_of_Palestine_Round.svg.png');
+            background-size: cover;
+            background-position: center;
+            /* تأثير الـ 3D والبروز */
+            box-shadow: 
+                0 10px 20px rgba(0,0,0,0.2), 
+                inset 0 -5px 10px rgba(0,0,0,0.3),
+                inset 0 5px 10px rgba(255,255,255,0.4);
+            border: 3px solid #fff;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .pal-flag-3d:hover { transform: scale(1.1) rotate(10deg); cursor: pointer; }
+
         h2 { color: #2d3436; font-weight: 900; margin-bottom: 25px; font-size: 24px; }
         input { 
             width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 15px; 
@@ -40,6 +58,8 @@
             color: white; border: none; border-radius: 15px; font-weight: 700; cursor: pointer; font-size: 18px; 
             transition: all 0.3s ease;
         }
+        button:hover { transform: translateY(-3px); box-shadow: 0 10px 15px rgba(108, 92, 231, 0.3); }
+
         .decor-circle {
             position: absolute; border-radius: 50%; background: linear-gradient(var(--primary-color), var(--secondary-color));
             filter: blur(60px); opacity: 0.1; z-index: -1;
@@ -56,7 +76,9 @@
     <div class="decor-circle" style="width: 250px; height: 250px; bottom: 10%; right: 10%;"></div>
 
     <div class="login-container">
-        <div class="icon-header">🛡️</div>
+        <div class="icon-header">
+            <div class="pal-flag-3d"></div>
+        </div>
         <h2>مرحباً بك</h2>
         <input type="text" id="user" placeholder="اسم المستخدم" autocomplete="off">
         <input type="password" id="pass" placeholder="كلمة المرور">
@@ -76,7 +98,6 @@
                 return;
             }
 
-            // إظهار شاشة التحميل
             loader.style.display = 'flex';
 
             try {
