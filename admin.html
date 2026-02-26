@@ -5,141 +5,94 @@
     <title>لوحة الإدارة | عالم المصيبة</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;800;900&display=swap" rel="stylesheet">
     <style>
-        :root { --p: #6c5ce7; --s: #00cec9; --bg: #f4f7fe; --danger: #ff7675; --success: #55efc4; }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Tajawal', sans-serif; background: var(--bg); padding: 20px; color: #2d3436; }
-        .container { max-width: 1000px; margin: auto; }
-        
-        /* قفل الدخول بتصميم الموقع */
-        #lock { background: white; padding: 50px 30px; border-radius: 30px; text-align: center; margin-top: 80px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); border: 1px solid #edf2f7; }
-        #lock h2 { margin-bottom: 20px; color: var(--p); font-weight: 900; }
-        .login-input { width: 100%; max-width: 300px; padding: 15px; border-radius: 15px; border: 2px solid #eee; text-align: center; margin-bottom: 15px; outline: none; transition: 0.3s; }
-        .login-input:focus { border-color: var(--p); }
-        .login-btn { width: 100%; max-width: 300px; padding: 15px; background: var(--p); color: white; border: none; border-radius: 15px; font-weight: 900; cursor: pointer; }
-
-        /* اللوحة الرئيسية */
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        :root { --p: #6c5ce7; --s: #00cec9; --bg: #f4f7fe; --success: #55efc4; --danger: #ff7675; }
+        body { font-family: 'Tajawal', sans-serif; background: var(--bg); padding: 20px; }
         .card { background: white; padding: 25px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 25px; border: 1px solid #edf2f7; }
-        h3 { margin-bottom: 20px; font-weight: 900; color: var(--p); display: flex; align-items: center; gap: 10px; }
-
-        /* جدول المستخدمين */
-        .user-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #f8f9fa; }
-        .user-info { flex: 1; }
-        .user-info span { display: block; font-weight: 900; font-size: 16px; }
-        .user-info small { color: var(--p); font-weight: 700; font-size: 15px; }
-        
-        .balance-ctrl { display: flex; gap: 10px; align-items: center; }
-        .amt-input { width: 90px; padding: 10px; border-radius: 12px; border: 2px solid #eee; text-align: center; font-weight: 900; }
-        .btn-action { width: 40px; height: 40px; border: none; border-radius: 12px; color: white; cursor: pointer; font-size: 20px; font-weight: 900; transition: 0.2s; }
-        .btn-action:active { transform: scale(0.9); }
-
-        /* جدول الطلبات */
-        .order-item { padding: 20px; border-bottom: 1px solid #f8f9fa; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 15px; }
-        .order-details { flex: 2; min-width: 250px; }
-        .order-status-ctrl { flex: 1; display: flex; gap: 10px; align-items: center; justify-content: flex-end; }
-        select { padding: 10px; border-radius: 12px; border: 1px solid #eee; font-family: 'Tajawal'; font-weight: 700; outline: none; }
-        .save-status-btn { background: var(--p); color: white; border: none; padding: 10px 15px; border-radius: 12px; font-weight: 700; cursor: pointer; }
+        h2 { color: var(--p); font-weight: 900; margin-bottom: 20px; border-right: 5px solid var(--p); padding-right: 15px; }
+        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #f1f2f6; flex-wrap: wrap; gap: 10px; }
+        .user-name { font-weight: 900; font-size: 16px; }
+        .amt-input { width: 90px; padding: 8px; border-radius: 12px; border: 2px solid #eee; text-align: center; font-weight: 900; outline: none; }
+        .btn-status { background: var(--p); color: white; border: none; padding: 10px 15px; border-radius: 12px; cursor: pointer; font-weight: 700; transition: 0.3s; }
+        .btn-status:disabled { opacity: 0.5; cursor: not-allowed; }
+        select { padding: 10px; border-radius: 12px; border: 1px solid #eee; font-family: 'Tajawal'; font-weight: 700; outline: none; background: #fff; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div id="lock">
-            <h2>🛡️ دخول المدير</h2>
-            <input type="password" id="admin_p" class="login-input" placeholder="كلمة المرور">
-            <br>
-            <button onclick="checkAdmin()" class="login-btn">دخول</button>
+    <div class="container" id="main_ui">
+        <div class="card">
+            <h2>💰 المشتركين والأرصدة</h2>
+            <div id="users_list">جاري التحميل...</div>
         </div>
-
-        <div id="main_ui" style="display:none">
-            <div class="header">
-                <h1 style="font-weight: 900; color: #2d3436;">لوحة الإدارة</h1>
-                <button onclick="loadData()" style="padding: 10px 20px; border-radius: 15px; border: 1px solid #ddd; background: white; cursor: pointer; font-weight: 700;">🔄 تحديث البيانات</button>
-            </div>
-
-            <div class="card">
-                <h3>💰 التحكم بالأرصدة</h3>
-                <div id="users_list">جاري تحميل المشتركين...</div>
-            </div>
-
-            <div class="card">
-                <h3>📦 طلبات الزبائن وتغيير الحالة</h3>
-                <div id="orders_list">جاري تحميل الطلبات...</div>
-            </div>
+        <div class="card">
+            <h2>📦 إدارة طلبات الزبائن</h2>
+            <div id="orders_list">جاري التحميل...</div>
         </div>
     </div>
 
     <script>
-        const url = "https://script.google.com/macros/s/AKfycbxCZH5YiykKS0_PS4rs2nsUbXDiXZfBelymkvieUeupMdJO4VxTsyTcn80sEdT6gO5o/exec";
-        
-        function checkAdmin() {
-            if(document.getElementById('admin_p').value === "0598787757") {
-                document.getElementById('lock').style.display='none';
-                document.getElementById('main_ui').style.display='block';
-                loadData();
-            } else { alert("كلمة المرور غلط يا مدير!"); }
-        }
+        // الرابط الجديد اللي بعتته يا قصي
+        const url = "https://script.google.com/macros/s/AKfycbzYqF3GdbE4XnMpyd9UXmRal0Ycw2UufleDVOC5S16gE-CbYaIpwbE-gAJqNoBbxqMo/exec";
 
         async function loadData() {
             try {
                 const [bRes, oRes] = await Promise.all([ 
-                    fetch(url+"?action=getBalances").then(r=>r.json()), 
-                    fetch(url+"?action=getOrders").then(r=>r.json()) 
+                    fetch(url + "?action=getBalances").then(r => r.json()), 
+                    fetch(url + "?action=getOrders").then(r => r.json()) 
                 ]);
-                
-                // عرض المستخدمين
-                let bHtml = "";
-                Object.keys(bRes).forEach(u => {
-                    if(u !== "المستخدم") {
-                        bHtml += `
-                        <div class="user-item">
-                            <div class="user-info">
-                                <span>👤 ${u}</span>
-                                <small>الرصيد: $${parseFloat(bRes[u]).toFixed(4)}</small>
-                            </div>
-                            <div class="balance-ctrl">
-                                <input type="number" id="i_${u}" class="amt-input" placeholder="0.00" step="0.01">
-                                <button class="btn-action" style="background:var(--success)" onclick="updateBal('${u}','add')">+</button>
-                                <button class="btn-action" style="background:var(--danger)" onclick="updateBal('${u}','sub')">-</button>
-                            </div>
-                        </div>`;
-                    }
-                });
-                document.getElementById('users_list').innerHTML = bHtml;
+
+                // عرض الأرصدة
+                document.getElementById('users_list').innerHTML = Object.keys(bRes).map(u => u !== "المستخدم" ? `
+                    <div class="item-row">
+                        <span class="user-name">👤 ${u} <small style="color:var(--p)">($${parseFloat(bRes[u]).toFixed(4)})</small></span>
+                        <div>
+                            <input type="number" id="i_${u}" class="amt-input" placeholder="0.00">
+                            <button onclick="updateBal('${u}','add')" style="color:var(--success); background:none; font-size:22px; cursor:pointer; font-weight:900; border:none; margin:0 5px;">+</button>
+                            <button onclick="updateBal('${u}','sub')" style="color:var(--danger); background:none; font-size:22px; cursor:pointer; font-weight:900; border:none; margin:0 5px;">-</button>
+                        </div>
+                    </div>` : '').join('');
 
                 // عرض الطلبات
-                document.getElementById('orders_list').innerHTML = oRes.reverse().map((o, idx) => `
-                    <div class="order-item">
-                        <div class="order-details">
-                            <b>${o.user}</b> - ${o.service} (${o.qty})<br>
-                            <small style="color:#888">${o.link} | ${o.date}</small>
+                document.getElementById('orders_list').innerHTML = oRes.reverse().map((o, i) => `
+                    <div class="item-row">
+                        <div style="font-size:14px; flex:1;">
+                            <b>${o.user}</b>: ${o.service} <small>(${o.qty})</small><br>
+                            <small style="color:#7f8c8d">${o.date}</small>
                         </div>
-                        <div class="order-status-ctrl">
-                            <select id="st_${idx}">
+                        <div>
+                            <select id="s_${i}">
                                 <option value="قيد المعالجة" ${o.status === 'قيد المعالجة' ? 'selected' : ''}>⏳ قيد المعالجة</option>
                                 <option value="مكتمل" ${o.status === 'مكتمل' ? 'selected' : ''}>✅ مكتمل</option>
                                 <option value="ملغي" ${o.status === 'ملغي' ? 'selected' : ''}>❌ ملغي</option>
                             </select>
-                            <button class="save-status-btn" onclick="updateStatus('${o.user}', '${o.date}', ${idx})">حفظ</button>
+                            <button class="btn-status" onclick="updateStatus('${o.user}','${o.date}',${i})">حفظ</button>
                         </div>
-                    </div>`).join('');
-            } catch (e) { console.error(e); }
+                    </div>`).join('') || "لا يوجد طلبات حالياً.";
+            } catch(e) { console.error(e); }
         }
 
         async function updateBal(u, t) {
-            const a = document.getElementById('i_'+u).value;
+            const a = document.getElementById('i_' + u).value;
             if(!a) return;
-            await fetch(url, { method:"POST", body:JSON.stringify({action:"updateBalance", user:u, amount:a, type:t}) });
+            await fetch(url, { method: "POST", body: JSON.stringify({ action: "updateBalance", user: u, amount: a, type: t }) });
             loadData();
         }
 
         async function updateStatus(u, d, id) {
-            const status = document.getElementById('st_'+id).value;
+            const s = document.getElementById('s_' + id).value;
             const btn = event.target;
-            btn.innerText = ".."; btn.disabled = true;
-            await fetch(url, { method: "POST", body: JSON.stringify({action: "updateOrderStatus", user: u, date: d, status: status}) });
-            btn.innerText = "تم ✅";
-            setTimeout(() => { btn.innerText = "حفظ"; btn.disabled = false; }, 2000);
+            btn.disabled = true; btn.innerText = "..";
+
+            await fetch(url, { 
+                method: "POST", 
+                body: JSON.stringify({ action: "updateOrderStatus", user: u, date: d, status: s }) 
+            });
+
+            alert("تم تحديث حالة الطلب بنجاح ✅");
+            btn.disabled = false; btn.innerText = "حفظ";
+            loadData(); 
         }
+
+        loadData();
     </script>
 </body>
 </html>
