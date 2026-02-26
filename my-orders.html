@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>طلباتي | عالم المصيبة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --p: #6c5ce7; --bg: #f4f7fe; }
+        body { font-family: 'Tajawal', sans-serif; background: var(--bg); padding: 20px; }
+        .container { max-width: 600px; margin: auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.03); margin-bottom: 15px; border-right: 5px solid var(--p); }
+        .card h4 { margin-bottom: 5px; color: #2d3436; }
+        .card p { font-size: 14px; color: #636e72; margin-bottom: 10px; }
+        .status { font-weight: 900; font-size: 12px; padding: 5px 10px; border-radius: 8px; background: #eee; }
+        .back-link { text-decoration: none; color: var(--p); font-weight: 700; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>📦 سجل طلباتي</h2>
+            <a href="services.html" class="back-link">🔙 العودة</a>
+        </div>
+        <div id="list">جاري تحميل طلباتك...</div>
+    </div>
+
+    <script>
+        const url = "https://script.google.com/macros/s/AKfycbxCZH5YiykKS0_PS4rs2nsUbXDiXZfBelymkvieUeupMdJO4VxTsyTcn80sEdT6gO5o/exec";
+        const user = sessionStorage.getItem('currentUser');
+
+        async function load() {
+            const r = await fetch(url + "?action=getOrders");
+            const d = await r.json();
+            // تصفية الطلبات لتظهر الخاصة بالمستخدم الحالي فقط
+            const myOrders = d.filter(o => o.user === user).reverse();
+            
+            document.getElementById('list').innerHTML = myOrders.length ? myOrders.map(o => `
+                <div class="card">
+                    <h4>${o.service}</h4>
+                    <p>الكمية: ${o.qty} | الرابط: ${o.link}</p>
+                    <small>${o.date}</small>
+                    <div style="margin-top:10px"><span class="status">قيد المعالجة ⏳</span></div>
+                </div>
+            `).join('') : "لا يوجد لديك طلبات بعد.";
+        }
+        load();
+    </script>
+</body>
+</html>
