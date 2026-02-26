@@ -28,10 +28,12 @@
 
 <script>
     const url = "https://script.google.com/macros/s/AKfycbzYqF3GdbE4XnMpyd9UXmRal0Ycw2UufleDVOC5S16gE-CbYaIpwbE-gAJqNoBbxqMo/exec";
-    const user = localStorage.getItem('user');
+    
+    // جلب الاسم من كل الاحتمالات الممكنة (user أو currentUser)
+    const storedUser = localStorage.getItem('user') || localStorage.getItem('currentUser') || sessionStorage.getItem('user') || sessionStorage.getItem('currentUser');
 
     async function loadOrders() {
-        if (!user) {
+        if (!storedUser) {
             document.getElementById('orders-list').innerHTML = '<div class="no-orders">الرجاء تسجيل الدخول أولاً</div>';
             return;
         }
@@ -39,29 +41,39 @@
         try {
             const res = await fetch(url + "?action=getOrders");
             const data = await res.json();
-            const myOrders = data.filter(o => o.user && o.user.toString().trim() === user.trim()).reverse();
+            
+            // تنظيف الاسم الحالي والأسماء في الشيت من الفراغات والمقارنة
+            const myOrders = data.filter(o => {
+                if (!o.user) return false;
+                return o.user.toString().trim().toLowerCase() === storedUser.trim().toLowerCase();
+            }).reverse();
 
             if (myOrders.length === 0) {
-                document.getElementById('orders-list').innerHTML = '<div class="no-orders">لا يوجد طلبات حالياً</div>';
+                document.getElementById('orders-list').innerHTML = `<div class="no-orders">لا يوجد طلبات لـ ${storedUser}</div>`;
                 return;
             }
 
             let html = "";
             myOrders.forEach(o => {
-                let stClass = (o.status === "مكتمل") ? "st-completed" : (o.status === "ملغي" ? "st-cancelled" : "st-pending");
+                let stClass = "st-pending";
+                let currentStatus = (o.status || "قيد المعالجة").trim();
+                
+                if (currentStatus === "مكتمل") stClass = "st-completed";
+                else if (currentStatus === "ملغي") stClass = "st-cancelled";
+
                 html += `
                     <div class="card">
                         <div style="display:flex; justify-content:space-between;">
                             <b style="color:var(--p); font-size:16px;">${o.service}</b>
-                            <small style="color:#bbb;">${o.date.split(' ')[0]}</small>
+                            <small style="color:#bbb;">${o.date ? o.date.split(' ')[0] : ''}</small>
                         </div>
                         <p style="margin:8px 0; font-size:13px; color:#666;">الكمية: ${o.qty} | السعر: ${o.price || '0$'}</p>
-                        <div class="status-badge ${stClass}">${o.status || 'قيد المعالجة'}</div>
+                        <div class="status-badge ${stClass}">${currentStatus}</div>
                     </div>`;
             });
             document.getElementById('orders-list').innerHTML = html;
         } catch (e) {
-            document.getElementById('orders-list').innerHTML = '<div class="no-orders">خطأ في الاتصال</div>';
+            document.getElementById('orders-list').innerHTML = '<div class="no-orders">خطأ في جلب البيانات</div>';
         }
     }
     loadOrders();
