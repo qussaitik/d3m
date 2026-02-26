@@ -2,60 +2,68 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة الإدارة | المصيبة</title>
+    <title>لوحة الإدارة | عالم المصيبة</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;800;900&display=swap" rel="stylesheet">
     <style>
-        :root { --p: #6c5ce7; --s: #00cec9; --danger: #ff7675; --success: #55efc4; }
-        body { font-family: 'Tajawal', sans-serif; background: #f4f7fe; margin: 0; padding: 20px; }
-        .container { max-width: 900px; margin: auto; }
+        :root { --p: #6c5ce7; --s: #00cec9; --bg: #f4f7fe; --danger: #ff7675; --success: #55efc4; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Tajawal', sans-serif; background: var(--bg); padding: 20px; color: #2d3436; }
+        .container { max-width: 1000px; margin: auto; }
         
-        /* قفل الدخول */
-        #lock { background: white; padding: 50px; border-radius: 30px; text-align: center; margin-top: 100px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); }
+        /* قفل الدخول بتصميم الموقع */
+        #lock { background: white; padding: 50px 30px; border-radius: 30px; text-align: center; margin-top: 80px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); border: 1px solid #edf2f7; }
+        #lock h2 { margin-bottom: 20px; color: var(--p); font-weight: 900; }
+        .login-input { width: 100%; max-width: 300px; padding: 15px; border-radius: 15px; border: 2px solid #eee; text-align: center; margin-bottom: 15px; outline: none; transition: 0.3s; }
+        .login-input:focus { border-color: var(--p); }
+        .login-btn { width: 100%; max-width: 300px; padding: 15px; background: var(--p); color: white; border: none; border-radius: 15px; font-weight: 900; cursor: pointer; }
+
+        /* اللوحة الرئيسية */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .card { background: white; padding: 25px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 25px; border: 1px solid #edf2f7; }
+        h3 { margin-bottom: 20px; font-weight: 900; color: var(--p); display: flex; align-items: center; gap: 10px; }
+
+        /* جدول المستخدمين */
+        .user-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #f8f9fa; }
+        .user-info { flex: 1; }
+        .user-info span { display: block; font-weight: 900; font-size: 16px; }
+        .user-info small { color: var(--p); font-weight: 700; font-size: 15px; }
         
-        .header-admin { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; background: white; padding: 20px; border-radius: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.02); }
-        .card { background: white; padding: 30px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 30px; border: 1px solid #edf2f7; }
-        
-        .user-row { 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 20px; border-bottom: 1px solid #f1f2f6; transition: 0.3s;
-        }
-        .user-row:hover { background: #fafbff; }
-        .user-name { font-weight: 900; font-size: 18px; color: #2d3436; }
-        .user-balance { color: var(--p); font-weight: 800; font-size: 20px; }
-        
-        .actions { display: flex; gap: 10px; align-items: center; }
-        input.amt { width: 80px; padding: 10px; border-radius: 12px; border: 2px solid #eee; text-align: center; font-weight: bold; }
-        .btn-up { padding: 10px 15px; border: none; border-radius: 12px; cursor: pointer; color: white; font-weight: bold; }
-        
-        .btn-clear { background: var(--danger); color: white; border: none; padding: 10px 20px; border-radius: 15px; cursor: pointer; font-weight: 800; }
-        .order-item { background: #fcfcfd; padding: 15px; border-radius: 15px; margin-bottom: 10px; border-right: 5px solid var(--s); font-size: 14px; }
+        .balance-ctrl { display: flex; gap: 10px; align-items: center; }
+        .amt-input { width: 90px; padding: 10px; border-radius: 12px; border: 2px solid #eee; text-align: center; font-weight: 900; }
+        .btn-action { width: 40px; height: 40px; border: none; border-radius: 12px; color: white; cursor: pointer; font-size: 20px; font-weight: 900; transition: 0.2s; }
+        .btn-action:active { transform: scale(0.9); }
+
+        /* جدول الطلبات */
+        .order-item { padding: 20px; border-bottom: 1px solid #f8f9fa; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 15px; }
+        .order-details { flex: 2; min-width: 250px; }
+        .order-status-ctrl { flex: 1; display: flex; gap: 10px; align-items: center; justify-content: flex-end; }
+        select { padding: 10px; border-radius: 12px; border: 1px solid #eee; font-family: 'Tajawal'; font-weight: 700; outline: none; }
+        .save-status-btn { background: var(--p); color: white; border: none; padding: 10px 15px; border-radius: 12px; font-weight: 700; cursor: pointer; }
     </style>
 </head>
 <body>
     <div class="container">
         <div id="lock">
-            <h2 style="color:var(--p)">🔐 منطقة محظورة</h2>
-            <input type="password" id="admin_p" style="width:80%; padding:15px; margin:20px 0; border-radius:15px; border:2px solid #eee; text-align:center;" placeholder="كلمة سر الإدارة">
-            <button onclick="checkAdmin()" style="width:80%; padding:15px; background:var(--p); color:white; border:none; border-radius:15px; font-weight:900; cursor:pointer;">دخول المدير</button>
+            <h2>🛡️ دخول المدير</h2>
+            <input type="password" id="admin_p" class="login-input" placeholder="كلمة المرور">
+            <br>
+            <button onclick="checkAdmin()" class="login-btn">دخول</button>
         </div>
 
         <div id="main_ui" style="display:none">
-            <div class="header-admin">
-                <h2 style="margin:0; color:var(--p)">لوحة تحكم المصيبة 👑</h2>
-                <button onclick="location.reload()" style="background:none; border:1px solid #eee; padding:10px; border-radius:10px; cursor:pointer;">🔄 تحديث</button>
+            <div class="header">
+                <h1 style="font-weight: 900; color: #2d3436;">لوحة الإدارة</h1>
+                <button onclick="loadData()" style="padding: 10px 20px; border-radius: 15px; border: 1px solid #ddd; background: white; cursor: pointer; font-weight: 700;">🔄 تحديث البيانات</button>
             </div>
 
             <div class="card">
-                <h3 style="margin-top:0">💰 أرصدة الملكات</h3>
-                <div id="users_list">جاري التحميل...</div>
+                <h3>💰 التحكم بالأرصدة</h3>
+                <div id="users_list">جاري تحميل المشتركين...</div>
             </div>
 
             <div class="card">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                    <h3 style="margin:0">📦 سجل العمليات</h3>
-                    <button class="btn-clear" onclick="clearOrders()">🗑️ مسح السجل</button>
-                </div>
-                <div id="orders_list"></div>
+                <h3>📦 طلبات الزبائن وتغيير الحالة</h3>
+                <div id="orders_list">جاري تحميل الطلبات...</div>
             </div>
         </div>
     </div>
@@ -68,50 +76,69 @@
                 document.getElementById('lock').style.display='none';
                 document.getElementById('main_ui').style.display='block';
                 loadData();
-            } else { alert("غلط يا حنون!"); }
+            } else { alert("كلمة المرور غلط يا مدير!"); }
         }
 
         async function loadData() {
-            const [bRes, oRes] = await Promise.all([ 
-                fetch(url+"?action=getBalances").then(r=>r.json()), 
-                fetch(url+"?action=getOrders").then(r=>r.json()) 
-            ]);
-            
-            let bHtml = "";
-            Object.keys(bRes).forEach(u => {
-                if(u!=="المستخدم") {
-                    bHtml += `
-                    <div class="user-row">
-                        <span class="user-name">👑 ${u}</span>
-                        <span class="user-balance">$${parseFloat(bRes[u]).toFixed(2)}</span>
-                        <div class="actions">
-                            <input type="number" id="i_${u}" class="amt" placeholder="0">
-                            <button class="btn-up" style="background:var(--success)" onclick="update('${u}','add')">+</button>
-                            <button class="btn-up" style="background:var(--danger)" onclick="update('${u}','sub')">-</button>
+            try {
+                const [bRes, oRes] = await Promise.all([ 
+                    fetch(url+"?action=getBalances").then(r=>r.json()), 
+                    fetch(url+"?action=getOrders").then(r=>r.json()) 
+                ]);
+                
+                // عرض المستخدمين
+                let bHtml = "";
+                Object.keys(bRes).forEach(u => {
+                    if(u !== "المستخدم") {
+                        bHtml += `
+                        <div class="user-item">
+                            <div class="user-info">
+                                <span>👤 ${u}</span>
+                                <small>الرصيد: $${parseFloat(bRes[u]).toFixed(4)}</small>
+                            </div>
+                            <div class="balance-ctrl">
+                                <input type="number" id="i_${u}" class="amt-input" placeholder="0.00" step="0.01">
+                                <button class="btn-action" style="background:var(--success)" onclick="updateBal('${u}','add')">+</button>
+                                <button class="btn-action" style="background:var(--danger)" onclick="updateBal('${u}','sub')">-</button>
+                            </div>
+                        </div>`;
+                    }
+                });
+                document.getElementById('users_list').innerHTML = bHtml;
+
+                // عرض الطلبات
+                document.getElementById('orders_list').innerHTML = oRes.reverse().map((o, idx) => `
+                    <div class="order-item">
+                        <div class="order-details">
+                            <b>${o.user}</b> - ${o.service} (${o.qty})<br>
+                            <small style="color:#888">${o.link} | ${o.date}</small>
                         </div>
-                    </div>`;
-                }
-            });
-            document.getElementById('users_list').innerHTML = bHtml;
-            document.getElementById('orders_list').innerHTML = oRes.reverse().map(o => `
-                <div class="order-item">
-                    <b>${o.user}</b> طلب <b>${o.service}</b> (${o.qty}) <br>
-                    <small style="color:#999">${o.date}</small>
-                </div>`).join('') || "لا يوجد طلبات";
+                        <div class="order-status-ctrl">
+                            <select id="st_${idx}">
+                                <option value="قيد المعالجة" ${o.status === 'قيد المعالجة' ? 'selected' : ''}>⏳ قيد المعالجة</option>
+                                <option value="مكتمل" ${o.status === 'مكتمل' ? 'selected' : ''}>✅ مكتمل</option>
+                                <option value="ملغي" ${o.status === 'ملغي' ? 'selected' : ''}>❌ ملغي</option>
+                            </select>
+                            <button class="save-status-btn" onclick="updateStatus('${o.user}', '${o.date}', ${idx})">حفظ</button>
+                        </div>
+                    </div>`).join('');
+            } catch (e) { console.error(e); }
         }
 
-        async function update(u, t) {
+        async function updateBal(u, t) {
             const a = document.getElementById('i_'+u).value;
             if(!a) return;
             await fetch(url, { method:"POST", body:JSON.stringify({action:"updateBalance", user:u, amount:a, type:t}) });
             loadData();
         }
 
-        async function clearOrders() {
-            if(confirm("بدك تمسح كل السجل من الشيت؟")) {
-                await fetch(url, { method:"POST", body:JSON.stringify({action:"clearOrders"}) });
-                loadData();
-            }
+        async function updateStatus(u, d, id) {
+            const status = document.getElementById('st_'+id).value;
+            const btn = event.target;
+            btn.innerText = ".."; btn.disabled = true;
+            await fetch(url, { method: "POST", body: JSON.stringify({action: "updateOrderStatus", user: u, date: d, status: status}) });
+            btn.innerText = "تم ✅";
+            setTimeout(() => { btn.innerText = "حفظ"; btn.disabled = false; }, 2000);
         }
     </script>
 </body>
