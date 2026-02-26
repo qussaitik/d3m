@@ -10,7 +10,6 @@
         :root { 
             --p: #6c5ce7; 
             --s: #00cec9; 
-            --bg-gradient: linear-gradient(135deg, #f6f8ff 0%, #e9f0ff 100%);
             --w: #25d366; 
             --danger: #ff4757; 
         }
@@ -19,40 +18,29 @@
         
         body { 
             font-family: 'Tajawal', sans-serif; 
-            background: var(--bg-gradient); 
+            /* خلفية "فرايحية" متحركة */
+            background: linear-gradient(-45deg, #f1f2f6, #e9f0ff, #f0eeff, #e0fcff);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             min-height: 100vh;
             padding-bottom: 30px; 
-            position: relative;
-            overflow-x: hidden;
         }
 
-        /* إضافة لمسة "الروح" بخلفية متحركة خفيفة */
-        body::before {
-            content: "";
-            position: fixed;
-            top: -10%; left: -10%;
-            width: 40%; height: 40%;
-            background: radial-gradient(circle, rgba(108, 92, 231, 0.05) 0%, transparent 70%);
-            z-index: -1;
-            animation: float 15s infinite alternate;
-        }
-
-        @keyframes float {
-            from { transform: translate(0, 0); }
-            to { transform: translate(20%, 20%); }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .navbar { 
-            background: rgba(255, 255, 255, 0.8); 
+            background: rgba(255, 255, 255, 0.9); 
             padding: 15px; display: flex; flex-direction: column; gap: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.03); 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05); 
             position: sticky; top: 0; z-index: 100;
-            backdrop-filter: blur(10px); /* تأثير زجاجي ناعم */
-            border-bottom: 1px solid rgba(255,255,255,0.5);
+            backdrop-filter: blur(15px);
         }
 
         .nav-top { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .user-tag { font-size: 14px; color: #636e72; }
         .user-tag b { color: var(--p); font-size: 18px; display: block; font-weight: 900; }
 
         .top-btns { display: flex; gap: 8px; }
@@ -61,63 +49,51 @@
 
         .box-btn {
             padding: 12px; border-radius: 12px; text-align: center; font-weight: 700;
-            text-decoration: none; font-size: 14px; transition: 0.3s; display: flex;
+            font-size: 14px; transition: 0.3s; display: flex;
             align-items: center; justify-content: center; gap: 5px; border: none; cursor: pointer;
         }
         
-        .balance-box { background: linear-gradient(135deg, var(--p), var(--s)); color: white; cursor: default; box-shadow: 0 5px 15px rgba(108, 92, 231, 0.2); }
-        .recharge-btn { background: var(--w); color: white; }
-        .support-btn { background: #0984e3; color: white; }
-        .orders-btn { background: white; color: var(--p); border: 1px solid rgba(108, 92, 231, 0.3); }
-        .refresh-btn { background: #f1f2f6; color: #2d3436; }
+        .balance-box { background: linear-gradient(135deg, var(--p), var(--s)); color: white; }
+        .refresh-btn { background: #eee; color: #333; }
         .logout-btn { background: var(--danger); color: white; }
 
-        .box-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 10px rgba(0,0,0,0.1); }
-
         .services-grid { 
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
             gap: 15px; padding: 25px 20px; max-width: 1000px; margin: auto; 
         }
 
         .service-card { 
-            background: rgba(255, 255, 255, 0.7); 
+            background: white; 
             padding: 20px; border-radius: 25px; 
             text-align: center; cursor: pointer; 
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.02);
-            backdrop-filter: blur(5px);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 15px rgba(0,0,0,0.03);
         }
         
         .service-card:hover { 
-            transform: translateY(-8px) scale(1.02); 
-            background: white;
-            border-color: var(--p); 
-            box-shadow: 0 20px 40px rgba(108, 92, 231, 0.12); 
+            transform: translateY(-10px);
+            border-color: var(--p);
+            box-shadow: 0 15px 30px rgba(108, 92, 231, 0.15);
         }
         
         .icon-circle { 
-            width: 60px; height: 60px; border-radius: 20px; /* زوايا أنعم بدل الدائرة الكاملة */
+            width: 55px; height: 55px; border-radius: 18px; 
             display: flex; align-items: center; justify-content: center; 
-            margin: 0 auto 12px; font-size: 26px;
-            transition: 0.3s;
+            margin: 0 auto 12px; font-size: 24px;
         }
-        
-        .service-card:hover .icon-circle { transform: rotate(10deg); }
 
         .tiktok-bg { background: #000; color: #fff; }
-        .insta-bg { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: #fff; }
+        .insta-bg { background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); color: #fff; }
         .fb-bg { background: #1877F2; color: #fff; }
         .yt-bg { background: #FF0000; color: #fff; }
 
-        h3 { font-size: 16px; color: #2d3436; margin-bottom: 5px; font-weight: 700; }
-        p { font-size: 13px; color: #6c5ce7; font-weight: 900; }
+        h3 { font-size: 15px; color: #2d3436; margin-bottom: 5px; }
+        p { font-size: 12px; color: var(--p); font-weight: 900; background: #f0eeff; display: inline-block; padding: 2px 10px; border-radius: 10px; }
 
         @media (min-width: 600px) {
-            .navbar { flex-direction: row; justify-content: space-between; padding: 10px 40px; }
             .nav-actions { grid-template-columns: repeat(4, auto); width: auto; }
-            .box-btn { min-width: 130px; }
-            .services-grid { grid-template-columns: repeat(3, 1fr); gap: 25px; }
+            .services-grid { grid-template-columns: repeat(3, 1fr); }
         }
     </style>
 </head>
@@ -137,9 +113,9 @@
             <div class="box-btn balance-box">
                 <div><small style="display:block; font-size:10px;">الرصيد</small><span id="b">$0.0000</span></div>
             </div>
-            <a href="https://wa.me/972555630038?text=أرغب في شحن رصيدي" class="box-btn recharge-btn">💰 شحن الرصيد</a>
-            <a href="https://wa.me/972555630038?text=أحتاج إلى دعم فني" class="box-btn support-btn">🛠️ الدعم الفني</a>
-            <a href="my-orders.html" class="box-btn orders-btn">📦 سجل طلباتي</a>
+            <a href="https://wa.me/972555630038" class="box-btn" style="background:var(--w); color:white;">💰 شحن</a>
+            <a href="https://wa.me/972555630038" class="box-btn" style="background:#0984e3; color:white;">🛠️ دعم</a>
+            <a href="my-orders.html" class="box-btn" style="background:white; color:var(--p); border:1px solid var(--p);">📦 طلباتي</a>
         </div>
     </div>
 
@@ -152,27 +128,27 @@
         <div class="service-card" onclick="navigateTo('مشاهدات تيك توك')">
             <div class="icon-circle tiktok-bg"><i class="fas fa-eye"></i></div>
             <h3>مشاهدات تيك توك</h3>
-            <p>10,000 مشاهدة بـ 1$</p>
+            <p>10,000 بـ 1$</p>
         </div>
         <div class="service-card" onclick="navigateTo('إعجابات تيك توك')">
             <div class="icon-circle tiktok-bg"><i class="fas fa-heart"></i></div>
             <h3>إعجابات تيك توك</h3>
-            <p>10,000 إعجاب بـ 1$</p>
+            <p>10,000 بـ 1$</p>
         </div>
         <div class="service-card" onclick="navigateTo('متابعين إنستغرام')">
             <div class="icon-circle insta-bg"><i class="fab fa-instagram"></i></div>
             <h3>متابعين إنستغرام</h3>
-            <p>1000 متابع بـ 3$</p>
+            <p>1000 بـ 3$</p>
         </div>
         <div class="service-card" onclick="navigateTo('متابعين فيسبوك')">
             <div class="icon-circle fb-bg"><i class="fab fa-facebook-f"></i></div>
             <h3>متابعين فيسبوك</h3>
-            <p>1000 متابع بـ 4$</p>
+            <p>1000 بـ 4$</p>
         </div>
         <div class="service-card" onclick="navigateTo('متابعين يوتيوب')">
             <div class="icon-circle yt-bg"><i class="fab fa-youtube"></i></div>
             <h3>متابعين يوتيوب</h3>
-            <p>1000 مشترك بـ 15$</p>
+            <p>1000 بـ 15$</p>
         </div>
     </div>
 
@@ -191,7 +167,6 @@
 
         function logout() {
             sessionStorage.clear();
-            localStorage.removeItem('chosenService');
             window.location.href = "index.html";
         }
 
