@@ -12,19 +12,19 @@
         .header { text-align: center; margin-bottom: 30px; }
         .header h1 { font-weight: 900; color: var(--p); }
         
-        .card { background: white; padding: 20px; border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 15px; border: 1px solid #edf2f7; position: relative; overflow: hidden; }
-        .card h4 { margin: 0 0 10px 0; font-weight: 800; font-size: 18px; color: #2d3436; }
+        .card { background: white; padding: 20px; border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 15px; border: 1px solid #edf2f7; position: relative; }
+        .card h4 { margin: 0 0 10px 0; font-weight: 800; font-size: 17px; color: #2d3436; }
         .card p { margin: 5px 0; font-size: 14px; color: #636e72; }
-        .card .date { font-size: 12px; color: #b2bec3; }
+        .card .date { font-size: 12px; color: #b2bec3; margin-top: 10px; }
 
-        /* تنسيق الألوان للحالات */
         .status-badge { display: inline-block; padding: 6px 15px; border-radius: 12px; font-weight: 800; font-size: 12px; margin-top: 10px; }
         .st-pending { background: #fff9e6; color: var(--warning); border: 1px solid var(--warning); }
         .st-completed { background: #e6fffb; color: var(--success); border: 1px solid var(--success); }
         .st-cancelled { background: #fff5f5; color: var(--danger); border: 1px solid var(--danger); }
 
         .loading { text-align: center; padding: 50px; font-weight: 800; color: var(--p); }
-        .no-orders { text-align: center; padding: 40px; background: white; border-radius: 25px; color: #b2bec3; font-weight: 800; }
+        .no-orders { text-align: center; padding: 40px; background: white; border-radius: 25px; color: #b2bec3; font-weight: 800; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .btn-home { display: inline-block; margin-top: 15px; padding: 10px 20px; background: var(--p); color: white; text-decoration: none; border-radius: 15px; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -32,11 +32,11 @@
 <div class="container">
     <div class="header">
         <h1>📦 سجل طلباتي</h1>
-        <p>متابعة حالة طلباتك في عالم المصيبة</p>
+        <p>متابعة فوريّة لحالة طلباتك</p>
     </div>
 
     <div id="orders-container">
-        <div class="loading">جاري جلب طلباتك...</div>
+        <div class="loading">جاري جلب بياناتك من عالم المصيبة...</div>
     </div>
 </div>
 
@@ -44,12 +44,16 @@
     // الرابط الجديد تبعك يا قصي
     const url = "https://script.google.com/macros/s/AKfycbzYqF3GdbE4XnMpyd9UXmRal0Ycw2UufleDVOC5S16gE-CbYaIpwbE-gAJqNoBbxqMo/exec";
     
-    // بنجيب اسم المستخدم اللي مسجل دخول (المخزن في المتصفح)
-    const currentUser = localStorage.getItem('user');
+    // محاولة ذكية لجلب اسم المستخدم
+    let currentUser = localStorage.getItem('user') || sessionStorage.getItem('user');
 
     async function loadMyOrders() {
         if (!currentUser) {
-            document.getElementById('orders-container').innerHTML = '<div class="no-orders">يرجى تسجيل الدخول أولاً</div>';
+            document.getElementById('orders-container').innerHTML = `
+                <div class="no-orders">
+                    <p>عذراً، لم نتمكن من التعرف على حسابك.</p>
+                    <a href="index.html" class="btn-home">سجل دخولك من هنا</a>
+                </div>`;
             return;
         }
 
@@ -57,17 +61,22 @@
             const response = await fetch(url + "?action=getOrders");
             const allOrders = await response.json();
             
-            // فلترة الطلبات عشان نعرض بس طلبات هاد المستخدم
-            const myOrders = allOrders.filter(o => o.user === currentUser).reverse();
+            // فلترة الطلبات مع تنظيف الاسم من أي فراغات زائدة
+            const myOrders = allOrders.filter(o => 
+                o.user && o.user.toString().trim() === currentUser.trim()
+            ).reverse();
 
             if (myOrders.length === 0) {
-                document.getElementById('orders-container').innerHTML = '<div class="no-orders">لا يوجد لديك طلبات سابقة.</div>';
+                document.getElementById('orders-container').innerHTML = `
+                    <div class="no-orders">
+                        <p>لا يوجد طلبات مسجلة باسم: <br><b style="color:var(--p)">${currentUser}</b></p>
+                        <a href="services.html" class="btn-home">اطلب الآن</a>
+                    </div>`;
                 return;
             }
 
             let html = "";
             myOrders.forEach(o => {
-                // تحديد شكل ولون الحالة
                 let statusClass = "st-pending";
                 let statusText = o.status || "قيد المعالجة";
 
@@ -78,8 +87,8 @@
                     <div class="card">
                         <h4>${o.service}</h4>
                         <p>الكمية: <b>${o.qty}</b></p>
-                        <p>الرابط: <a href="${o.link}" target="_blank" style="color:var(--p); text-decoration:none;">اضغط هنا</a></p>
-                        <div class="date">تاريخ الطلب: ${o.date}</div>
+                        <p>الرابط: <a href="${o.link}" target="_blank" style="color:var(--p); text-decoration:none; word-break:break-all;">${o.link}</a></p>
+                        <div class="date">📅 ${o.date}</div>
                         <div class="status-badge ${statusClass}">${statusText}</div>
                     </div>
                 `;
@@ -88,11 +97,11 @@
             document.getElementById('orders-container').innerHTML = html;
 
         } catch (e) {
-            document.getElementById('orders-container').innerHTML = '<div class="no-orders">حدث خطأ في تحميل البيانات.</div>';
+            document.getElementById('orders-container').innerHTML = '<div class="no-orders">حدث خطأ في جلب البيانات، حاول مرة أخرى.</div>';
         }
     }
 
-    // تشغيل الدالة عند فتح الصفحة
+    // تشغيل الدالة
     loadMyOrders();
 </script>
 
