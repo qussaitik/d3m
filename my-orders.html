@@ -1,109 +1,107 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>طلباتي | عالم المصيبة</title>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سجل طلباتي | عالم المصيبة</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;800;900&display=swap" rel="stylesheet">
     <style>
         :root { --p: #6c5ce7; --bg: #f4f7fe; --success: #00b894; --danger: #d63031; --warning: #fdcb6e; }
-        body { font-family: 'Tajawal', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #2d3436; }
+        body { font-family: 'Tajawal', sans-serif; background: var(--bg); padding: 20px; color: #2d3436; text-align: center; }
         .container { max-width: 600px; margin: auto; }
-        .header { text-align: center; margin-bottom: 30px; }
-        .header h1 { font-weight: 900; color: var(--p); }
-        
-        .card { background: white; padding: 20px; border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 15px; border: 1px solid #edf2f7; position: relative; }
-        .card h4 { margin: 0 0 10px 0; font-weight: 800; font-size: 17px; color: #2d3436; }
-        .card p { margin: 5px 0; font-size: 14px; color: #636e72; }
-        .card .date { font-size: 12px; color: #b2bec3; margin-top: 10px; }
-
-        .status-badge { display: inline-block; padding: 6px 15px; border-radius: 12px; font-weight: 800; font-size: 12px; margin-top: 10px; }
+        .card { background: white; padding: 20px; border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 15px; border: 1px solid #edf2f7; text-align: right; }
+        .status-badge { display: inline-block; padding: 6px 15px; border-radius: 12px; font-weight: 800; font-size: 13px; margin-top: 10px; }
         .st-pending { background: #fff9e6; color: var(--warning); border: 1px solid var(--warning); }
         .st-completed { background: #e6fffb; color: var(--success); border: 1px solid var(--success); }
         .st-cancelled { background: #fff5f5; color: var(--danger); border: 1px solid var(--danger); }
-
-        .loading { text-align: center; padding: 50px; font-weight: 800; color: var(--p); }
-        .no-orders { text-align: center; padding: 40px; background: white; border-radius: 25px; color: #b2bec3; font-weight: 800; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        .btn-home { display: inline-block; margin-top: 15px; padding: 10px 20px; background: var(--p); color: white; text-decoration: none; border-radius: 15px; font-size: 14px; }
+        input { padding: 15px; border-radius: 15px; border: 2px solid #ddd; width: 80%; margin-bottom: 15px; font-family: 'Tajawal'; text-align: center; font-size: 16px; outline: none; }
+        .btn { padding: 12px 30px; background: var(--p); color: white; border: none; border-radius: 15px; cursor: pointer; font-weight: 900; font-size: 16px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header">
-        <h1>📦 سجل طلباتي</h1>
-        <p>متابعة فوريّة لحالة طلباتك</p>
+    <h1 style="color:var(--p); font-weight:900; margin-bottom:30px;">📦 سجل طلباتي</h1>
+    
+    <div id="login-section" style="display:none; background:white; padding:40px 20px; border-radius:30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+        <h3 style="margin-bottom:20px;">أهلاً بك في عالم المصيبة</h3>
+        <p style="color:#666; margin-bottom:20px;">الرجاء كتابة اسم المستخدم الخاص بك لعرض طلباتك</p>
+        <input type="text" id="user-input" placeholder="اكتب اسمك هنا (مثلاً: فيصل)">
+        <br>
+        <button class="btn" onclick="saveUser()">دخول وعرض الطلبات</button>
     </div>
 
-    <div id="orders-container">
-        <div class="loading">جاري جلب بياناتك من عالم المصيبة...</div>
+    <div id="orders-display">
+        <div id="loading-msg" style="padding:50px; font-weight:800; color:var(--p);">جاري مزامنة بياناتك مع الشيت...</div>
+        <div id="orders-list"></div>
     </div>
 </div>
 
 <script>
-    // الرابط الجديد تبعك يا قصي
     const url = "https://script.google.com/macros/s/AKfycbzYqF3GdbE4XnMpyd9UXmRal0Ycw2UufleDVOC5S16gE-CbYaIpwbE-gAJqNoBbxqMo/exec";
     
-    // محاولة ذكية لجلب اسم المستخدم
-    let currentUser = localStorage.getItem('user') || sessionStorage.getItem('user');
+    // 1. فحص هل المستخدم مسجل اسمه في المتصفح؟
+    let currentUser = localStorage.getItem('user');
 
-    async function loadMyOrders() {
-        if (!currentUser) {
-            document.getElementById('orders-container').innerHTML = `
-                <div class="no-orders">
-                    <p>عذراً، لم نتمكن من التعرف على حسابك.</p>
-                    <a href="index.html" class="btn-home">سجل دخولك من هنا</a>
-                </div>`;
-            return;
-        }
+    if (!currentUser) {
+        document.getElementById('login-section').style.display = 'block';
+        document.getElementById('loading-msg').style.display = 'none';
+    } else {
+        fetchMyOrders(currentUser);
+    }
 
-        try {
-            const response = await fetch(url + "?action=getOrders");
-            const allOrders = await response.json();
-            
-            // فلترة الطلبات مع تنظيف الاسم من أي فراغات زائدة
-            const myOrders = allOrders.filter(o => 
-                o.user && o.user.toString().trim() === currentUser.trim()
-            ).reverse();
-
-            if (myOrders.length === 0) {
-                document.getElementById('orders-container').innerHTML = `
-                    <div class="no-orders">
-                        <p>لا يوجد طلبات مسجلة باسم: <br><b style="color:var(--p)">${currentUser}</b></p>
-                        <a href="services.html" class="btn-home">اطلب الآن</a>
-                    </div>`;
-                return;
-            }
-
-            let html = "";
-            myOrders.forEach(o => {
-                let statusClass = "st-pending";
-                let statusText = o.status || "قيد المعالجة";
-
-                if (statusText === "مكتمل") statusClass = "st-completed";
-                if (statusText === "ملغي") statusClass = "st-cancelled";
-
-                html += `
-                    <div class="card">
-                        <h4>${o.service}</h4>
-                        <p>الكمية: <b>${o.qty}</b></p>
-                        <p>الرابط: <a href="${o.link}" target="_blank" style="color:var(--p); text-decoration:none; word-break:break-all;">${o.link}</a></p>
-                        <div class="date">📅 ${o.date}</div>
-                        <div class="status-badge ${statusClass}">${statusText}</div>
-                    </div>
-                `;
-            });
-
-            document.getElementById('orders-container').innerHTML = html;
-
-        } catch (e) {
-            document.getElementById('orders-container').innerHTML = '<div class="no-orders">حدث خطأ في جلب البيانات، حاول مرة أخرى.</div>';
+    // 2. دالة حفظ الاسم والتحميل
+    function saveUser() {
+        const name = document.getElementById('user-input').value.trim();
+        if (name) {
+            localStorage.setItem('user', name);
+            location.reload();
+        } else {
+            alert("يا غالي اكتب اسمك أول!");
         }
     }
 
-    // تشغيل الدالة
-    loadMyOrders();
-</script>
+    // 3. دالة جلب البيانات من الشيت
+    async function fetchMyOrders(user) {
+        try {
+            const response = await fetch(url + "?action=getOrders");
+            const data = await response.json();
+            
+            // فلترة الطلبات حسب الاسم (مثلاً: فيصل)
+            const myOrders = data.filter(o => o.user && o.user.toString().trim() === user.trim()).reverse();
 
+            if (myOrders.length === 0) {
+                document.getElementById('orders-list').innerHTML = `
+                    <div class="card" style="text-align:center; padding:40px;">
+                        <p>لا يوجد طلبات مسجلة باسم <b>${user}</b></p>
+                        <button class="btn" onclick="localStorage.clear(); location.reload();" style="background:#eee; color:#333; font-size:12px;">تغيير الاسم</button>
+                    </div>`;
+            } else {
+                let html = "";
+                myOrders.forEach(o => {
+                    let stClass = "st-pending";
+                    let stText = o.status || "قيد المعالجة";
+                    
+                    if (stText === "مكتمل") stClass = "st-completed";
+                    if (stText === "ملغي") stClass = "st-cancelled";
+
+                    html += `
+                        <div class="card">
+                            <h4 style="margin:0; color:var(--p);">${o.service}</h4>
+                            <p style="font-size:13px; margin:10px 0;">الكمية: <b>${o.qty}</b> | السعر: <b>${o.price || '0$'}</b></p>
+                            <p style="font-size:12px; color:#999; word-break:break-all;">${o.link}</p>
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+                                <span style="font-size:11px; color:#bbb;">📅 ${o.date}</span>
+                                <span class="status-badge ${stClass}">${stText}</span>
+                            </div>
+                        </div>`;
+                });
+                document.getElementById('orders-list').innerHTML = html;
+            }
+            document.getElementById('loading-msg').style.display = 'none';
+        } catch (e) {
+            document.getElementById('loading-msg').innerHTML = "حدث خطأ في الاتصال، تأكد من الإنترنت.";
+        }
+    }
+</script>
 </body>
 </html>
