@@ -3,51 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الخدمات المتاحة</title>
+    <title>عالم المصيبة | الخدمات</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --p: #6c5ce7; --s: #00cec9; --bg: #f4f7fe; }
+        :root { --p: #6c5ce7; --s: #00cec9; --bg: #f4f7fe; --w: #25d366; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Tajawal', sans-serif; background: var(--bg); padding-bottom: 30px; }
         
         .navbar { 
-            background: white; padding: 15px 20px; display: flex; 
-            justify-content: space-between; align-items: center;
+            background: white; padding: 15px; display: flex; flex-direction: column; gap: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100;
-            border-bottom: 1px solid #eee;
         }
+
+        .nav-top { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .user-tag { font-size: 14px; color: #636e72; }
-        .user-tag b { color: var(--p); font-size: 18px; display: block; line-height: 1.2; }
+        .user-tag b { color: var(--p); font-size: 18px; display: block; font-weight: 900; }
+
+        .nav-actions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; }
+
+        /* تنسيق موحد للأزرار لتبدو مثل خانة الرصيد */
+        .box-btn {
+            padding: 12px; border-radius: 12px; text-align: center; font-weight: 700;
+            text-decoration: none; font-size: 14px; transition: 0.3s; display: flex;
+            align-items: center; justify-content: center; gap: 5px; border: none; cursor: pointer;
+        }
         
-        .nav-left { display: flex; align-items: center; gap: 12px; }
+        .balance-box { background: linear-gradient(135deg, var(--p), var(--s)); color: white; cursor: default; }
+        .recharge-btn { background: var(--w); color: white; }
+        .support-btn { background: #0984e3; color: white; }
+        .orders-btn { background: white; color: var(--p); border: 2px solid var(--p); }
+        .refresh-btn { background: #dfe6e9; color: #2d3436; }
 
-        .balance-box { 
-            background: linear-gradient(135deg, var(--p), var(--s)); 
-            color: white; padding: 8px 18px; border-radius: 12px; 
-            text-align: center; box-shadow: 0 5px 15px rgba(108, 92, 231, 0.2);
-            min-width: 110px;
-        }
-
-        /* تنسيق زر شحن الرصيد */
-        .recharge-btn {
-            background: #25d366; /* لون الواتساب */
-            color: white;
-            text-decoration: none;
-            padding: 10px 15px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: 0.3s;
-            box-shadow: 0 4px 10px rgba(37, 211, 102, 0.2);
-        }
-        .recharge-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(37, 211, 102, 0.3);
-            filter: brightness(1.1);
-        }
+        .box-btn:hover { transform: translateY(-2px); opacity: 0.9; }
 
         .services-grid { 
             display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
@@ -59,34 +46,39 @@
             text-align: center; cursor: pointer; border: 1px solid #edf2f7;
             transition: all 0.3s ease; box-shadow: 0 10px 20px rgba(0,0,0,0.02);
         }
-        .service-card:hover { 
-            transform: translateY(-5px); border-color: var(--p);
-            box-shadow: 0 15px 30px rgba(108, 92, 231, 0.1);
-        }
+        .service-card:hover { transform: translateY(-5px); border-color: var(--p); }
         .icon-circle { 
-            width: 60px; height: 60px; background: #f0eeff; 
-            border-radius: 50%; display: flex; align-items: center; 
-            justify-content: center; margin: 0 auto 15px; font-size: 26px;
+            width: 60px; height: 60px; background: #f0eeff; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; 
+            margin: 0 auto 15px; font-size: 26px;
         }
-        .service-card h3 { color: #2d3436; margin-bottom: 8px; font-size: 20px; }
-        .service-card p { color: #b2bec3; font-size: 14px; font-weight: 700; }
+
+        @media (min-width: 600px) {
+            .navbar { flex-direction: row; justify-content: space-between; }
+            .nav-actions { grid-template-columns: repeat(4, auto); width: auto; }
+            .box-btn { min-width: 130px; }
+        }
     </style>
 </head>
 <body>
     <script>if(!sessionStorage.getItem('currentUser')) window.location.href="index.html";</script>
     
     <div class="navbar">
-        <div class="user-tag">مرحباً بك،<b id="u">...</b></div>
+        <div class="nav-top">
+            <div class="user-tag">أهلاً بك،<b id="u">...</b></div>
+            <button class="box-btn refresh-btn" onclick="location.reload()">🔄 تحديث</button>
+        </div>
         
-        <div class="nav-left">
-            <a href="https://wa.me/972555630038?text=مرحباً، أرغب في شحن رصيدي في موقع عالم المصيبة." class="recharge-btn">
-                <span>⚡ شحن</span>
-            </a>
-            
-            <div class="balance-box">
-                <small style="font-size: 11px; opacity: 0.9;">الرصيد المتوفر</small>
-                <div id="b" style="font-size: 17px; font-weight: 900;">$0.0000</div>
+        <div class="nav-actions">
+            <div class="box-btn balance-box">
+                <div><small style="display:block; font-size:10px;">الرصيد</small><span id="b">$0.0000</span></div>
             </div>
+
+            <a href="https://wa.me/972555630038?text=أرغب في شحن رصيدي" class="box-btn recharge-btn">💰 شحن الرصيد</a>
+            
+            <a href="https://wa.me/972555630038?text=أحتاج إلى دعم فني" class="box-btn support-btn">🛠️ الدعم الفني</a>
+            
+            <a href="my-orders.html" class="box-btn orders-btn">📦 سجل طلباتي</a>
         </div>
     </div>
 
@@ -94,17 +86,17 @@
         <div class="service-card" onclick="navigateTo('متابعين تيك توك')">
             <div class="icon-circle">👤</div>
             <h3>متابعين تيك توك</h3>
-            <p>سعر الـ 1000 متابع: 5$</p>
+            <p>1000 متابع بـ 5$</p>
         </div>
         <div class="service-card" onclick="navigateTo('مشاهدات تيك توك')">
             <div class="icon-circle">👁️</div>
             <h3>مشاهدات تيك توك</h3>
-            <p>سعر الـ 10,000 مشاهدة: 1$</p>
+            <p>10,000 مشاهدة بـ 1$</p>
         </div>
         <div class="service-card" onclick="navigateTo('إعجابات تيك توك')">
             <div class="icon-circle">❤️</div>
             <h3>إعجابات تيك توك</h3>
-            <p>سعر الـ 10,000 إعجاب: 1$</p>
+            <p>10,000 إعجاب بـ 1$</p>
         </div>
     </div>
 
@@ -117,12 +109,8 @@
             try {
                 const response = await fetch(url + "?action=getBalances");
                 const data = await response.json();
-                const balanceValue = parseFloat(data[user] || 0);
-                document.getElementById('b').innerText = "$" + balanceValue.toFixed(4);
-            } catch(e) { 
-                console.error("Error fetching balance");
-                document.getElementById('b').innerText = "$0.0000";
-            }
+                document.getElementById('b').innerText = "$" + parseFloat(data[user] || 0).toFixed(4);
+            } catch(e) { document.getElementById('b').innerText = "$0.0000"; }
         }
 
         function navigateTo(serviceName) {
